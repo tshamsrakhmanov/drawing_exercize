@@ -3,46 +3,44 @@ from additional_types import *
 from colors import *
 
 
-def draw_circle(point: Point, radius, matrix, color=(255, 255, 255)):
+def draw_circle(
+        point: Point,
+        radius: int,
+        pixel_matrix: PixelMatrix,
+        input_color=(255, 255, 255)
+        ):
+
     for dx in range(radius):
         for dy in range(radius):
             if dx ** 2 + dy ** 2 <= radius ** 2:
-                try:
-                    matrix[dx + point.x][dy + point.y] = color
-                except Exception:
-                    pass
-                try:
-                    matrix[dx + point.x][-dy + point.y] = color
-                except Exception:
-                    pass
-                try:
-                    matrix[-dx + point.x][dy + point.y] = color
-                except Exception:
-                    pass
-                try:
-                    matrix[-dx + point.x][-dy + point.y] = color
-                except Exception:
-                    pass
+                pixel_matrix.addPixel(DrawablePixel(dx + point.x, dy + point.y, input_color))
+                pixel_matrix.addPixel(DrawablePixel(dx + point.x, -dy + point.y, input_color))
+                pixel_matrix.addPixel(DrawablePixel(-dx + point.x, dy + point.y, input_color))
+                pixel_matrix.addPixel(DrawablePixel(-dx + point.x, -dy + point.y, input_color))
 
 
 def draw_point(
         input_point: Point,
-        input_pixel_mesh: list,
-        input_color: RGBColor = (255, 255, 255)):
-    input_pixel_mesh.append(DrawablePixel(input_point.x + 1, input_point.y, input_color))
-    input_pixel_mesh.append(DrawablePixel(input_point.x - 1, input_point.y, input_color))
-    input_pixel_mesh.append(DrawablePixel(input_point.x, input_point.y, input_color))
-    input_pixel_mesh.append(DrawablePixel(input_point.x, input_point.y - 1, input_color))
-    input_pixel_mesh.append(DrawablePixel(input_point.x, input_point.y + 1, input_color))
+        pixel_matrix: PixelMatrix,
+        input_color: RGBColor = (255, 255, 255)
+        ):
+
+    pixel_matrix.addPixel(DrawablePixel(input_point.x + 1, input_point.y, input_color))
+    pixel_matrix.addPixel(DrawablePixel(input_point.x - 1, input_point.y, input_color))
+    pixel_matrix.addPixel(DrawablePixel(input_point.x, input_point.y, input_color))
+    pixel_matrix.addPixel(DrawablePixel(input_point.x, input_point.y - 1, input_color))
+    pixel_matrix.addPixel(DrawablePixel(input_point.x, input_point.y + 1, input_color))
 
 
-def draw_line(point_start: Point,
-              point_end: Point,
-              input_pixel_mesh: list,
-              color_of_line: RGBColor = COLOR_WHITE,
-              pointed=False,
-              color_start: RGBColor = COLOR_WHITE,
-              color_end: RGBColor = COLOR_WHITE):
+def draw_line(
+        point_start: Point,
+        point_end: Point,
+        pixel_matrix: PixelMatrix,
+        color_of_line: RGBColor = COLOR_WHITE,
+        pointed=False,
+        color_start: RGBColor = COLOR_WHITE,
+        color_end: RGBColor = COLOR_WHITE
+        ):
     # Implementation line-by-line of algorythm declared in article:
     # https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
     # some ohter comment
@@ -60,7 +58,7 @@ def draw_line(point_start: Point,
     error = dx + dy
 
     while True:
-        input_pixel_mesh.append(DrawablePixel(x0, y0, color_of_line))
+        pixel_matrix.addPixel(DrawablePixel(x0, y0, color_of_line))
 
         if x0 == x1 and y0 == y1:
             break
@@ -73,9 +71,12 @@ def draw_line(point_start: Point,
             y0 += sy
 
     if pointed:
-        draw_point(point_start, input_pixel_mesh, color_start)
-        draw_point(point_end, input_pixel_mesh, color_end)
+        draw_point(point_start, pixel_matrix, color_start)
+        draw_point(point_end, pixel_matrix, color_end)
 
 
-def toDecardCoordinates(x_input: int, y_input: int):
+def toDecardCoordinates(
+        x_input: int,
+        y_input: int
+        ):
     return int(settings.width / 2) + x_input, int(settings.height / 2) - y_input
