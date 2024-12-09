@@ -4,6 +4,14 @@ from colors import *
 
 
 def draw_circle(point: Point,radius: int,pixel_matrix: PixelMatrix,input_color=(255, 255, 255)):
+    """
+    Add circle (filled) to the screen
+    :param point: Center point of circle
+    :param radius: Radius of circle in pixels
+    :param pixel_matrix: PixelMatrix to draw a circle
+    :param input_color: Color for drawing
+    :return: None
+    """
     for dx in range(radius):
         for dy in range(radius):
             if dx ** 2 + dy ** 2 <= radius ** 2:
@@ -14,6 +22,13 @@ def draw_circle(point: Point,radius: int,pixel_matrix: PixelMatrix,input_color=(
 
 
 def draw_point(input_point: Point,pixel_matrix: PixelMatrix,input_color: RGBColor = (255, 255, 255)):
+    """
+    Add point drawing to the screen
+    :param input_point: Point ( coordinates) to use as a center for drawing
+    :param pixel_matrix: PixelMatrix
+    :param input_color: Color for point
+    :return: None
+    """
     pixel_matrix.add_pixel(DrawablePixel(input_point.x + 1, input_point.y, input_color))
     pixel_matrix.add_pixel(DrawablePixel(input_point.x - 1, input_point.y, input_color))
     pixel_matrix.add_pixel(DrawablePixel(input_point.x, input_point.y, input_color))
@@ -23,9 +38,18 @@ def draw_point(input_point: Point,pixel_matrix: PixelMatrix,input_color: RGBColo
 
 def draw_line(point_start: Point, point_end: Point, pixel_matrix: PixelMatrix, color_of_line: RGBColor = COLOR_WHITE,
               pointed=False, color_start: RGBColor = COLOR_WHITE, color_end: RGBColor = COLOR_WHITE):
-    # Implementation line-by-line of algorythm declared in article:
-    # https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-    # some other comment
+    """
+    Implementation of algorythm declared in article:
+    https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+    :param point_start: Start point
+    :param point_end: End point
+    :param pixel_matrix: PixelMatrix
+    :param color_of_line: Color, by which line will be drawn
+    :param pointed: If true - end and start of line will be drawn with points
+    :param color_start: If pointed true - declare desired color of end point
+    :param color_end: If pointed true - declare desired color of start point
+    :return: None
+    """
 
     x0 = point_start.x
     x1 = point_end.x
