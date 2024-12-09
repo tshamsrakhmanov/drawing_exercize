@@ -11,6 +11,11 @@ HEIGHT = settings.height
 
 def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+    pygame.display.set_caption('Graphics Module')
+    programIcon = pygame.image.load('icon.png')
+    pygame.display.set_icon(programIcon)
+
     clock = pygame.time.Clock()
     running = True
 
