@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+import settings
 
 @dataclass
 class Point:
@@ -8,6 +8,9 @@ class Point:
     """
     x: int
     y: int
+
+    # def __repr__(self):
+    #     return f'Point({self.x},{self.y})'
 
 
 @dataclass

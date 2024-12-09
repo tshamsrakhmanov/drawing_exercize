@@ -16,7 +16,7 @@ def main():
     # surface = pygame.surface
 
     # window name and icon setup
-    pygame.display.set_caption('Graphics Module')
+    # pygame.display.set_caption('Graphics Module')
     program_icon = pygame.image.load('extras/icon.png')
     pygame.display.set_icon(program_icon)
 
@@ -27,7 +27,7 @@ def main():
     count = 0
     dt_list = []
 
-    running = True
+    running = 1
 
     # drawing engine init (cache init, borders init)
     pixel_matrix = PixelMatrix(WIDTH, HEIGHT)
@@ -37,12 +37,12 @@ def main():
         # TEMP FEATURE
         pixel_array = pygame.PixelArray(screen)
 
-        rect = pygame.Rect(screen.get_rect().center, (0, 0)).inflate(*([min(screen.get_size()) // 2] * 2))
+        # rect = pygame.Rect(screen.get_rect().center, (0, 0)).inflate(*([min(screen.get_size()) // 2] * 2))
 
         # condition check to quit application
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False
+                running = 0
 
         #  reset screen - so fill it black
         # start = time.perf_counter()
@@ -52,17 +52,23 @@ def main():
 
         # calculate exact pixels, which needs to be displayed
         # start = time.perf_counter()
-        draw_window(pixel_matrix)
+
+        draw_window(pixel_array)
+
+        # pixel_array[100, 100] = (255, 255, 255)
+
         # end = time.perf_counter()
         # t2 = int((end - start) * 1000) / 1000
 
+
+
         # draw pixels, stored in PixelMatrix
         # start = time.perf_counter()
-        for coordinates, color in pixel_matrix:
+        # for coordinates, color in pixel_matrix:
             # screen.set_at((coordinates[0], coordinates[1]), color)
             # print(pygame.PixelArray.surface)
             # print(coordinates[0], coordinates[1])
-            pixel_array[coordinates[0] - 1, coordinates[1] - 1] = color
+            # pixel_array[coordinates[0] - 1, coordinates[1] - 1] = color
         # end = time.perf_counter()
         # t3 = int((end - start) * 1000) / 1000
 
