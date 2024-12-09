@@ -3,13 +3,7 @@ from additional_types import *
 from colors import *
 
 
-def draw_circle(
-        point: Point,
-        radius: int,
-        pixel_matrix: PixelMatrix,
-        input_color=(255, 255, 255)
-        ):
-
+def draw_circle(point: Point,radius: int,pixel_matrix: PixelMatrix,input_color=(255, 255, 255)):
     for dx in range(radius):
         for dy in range(radius):
             if dx ** 2 + dy ** 2 <= radius ** 2:
@@ -19,12 +13,7 @@ def draw_circle(
                 pixel_matrix.add_pixel(DrawablePixel(-dx + point.x, -dy + point.y, input_color))
 
 
-def draw_point(
-        input_point: Point,
-        pixel_matrix: PixelMatrix,
-        input_color: RGBColor = (255, 255, 255)
-        ):
-
+def draw_point(input_point: Point,pixel_matrix: PixelMatrix,input_color: RGBColor = (255, 255, 255)):
     pixel_matrix.add_pixel(DrawablePixel(input_point.x + 1, input_point.y, input_color))
     pixel_matrix.add_pixel(DrawablePixel(input_point.x - 1, input_point.y, input_color))
     pixel_matrix.add_pixel(DrawablePixel(input_point.x, input_point.y, input_color))
@@ -32,18 +21,11 @@ def draw_point(
     pixel_matrix.add_pixel(DrawablePixel(input_point.x, input_point.y + 1, input_color))
 
 
-def draw_line(
-        point_start: Point,
-        point_end: Point,
-        pixel_matrix: PixelMatrix,
-        color_of_line: RGBColor = COLOR_WHITE,
-        pointed=False,
-        color_start: RGBColor = COLOR_WHITE,
-        color_end: RGBColor = COLOR_WHITE
-        ):
+def draw_line(point_start: Point, point_end: Point, pixel_matrix: PixelMatrix, color_of_line: RGBColor = COLOR_WHITE,
+              pointed=False, color_start: RGBColor = COLOR_WHITE, color_end: RGBColor = COLOR_WHITE):
     # Implementation line-by-line of algorythm declared in article:
     # https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-    # some ohter comment
+    # some other comment
 
     x0 = point_start.x
     x1 = point_end.x
@@ -75,8 +57,13 @@ def draw_line(
         draw_point(point_end, pixel_matrix, color_end)
 
 
-def toDecardCoordinates(
-        x_input: int,
-        y_input: int
-        ):
+def tdc(x_input: int, y_input: int):
+    """
+    Convert Decard-oriented coordinates to screen-oriented coordinates
+    (center of a screen as 0;0 and x from left to right, y from bottom to top)
+    :param x_input: Coordinate of X in Decard coordinate system
+    :param y_input: Coordinate of Y in Decard coordinate system
+    :return: tuple (a,b) where a - x-coord in screen coordinate system, b - y-coord in screen coordinate system
+    """
+
     return int(settings.width / 2) + x_input, int(settings.height / 2) - y_input

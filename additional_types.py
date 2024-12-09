@@ -29,7 +29,7 @@ class PixelMatrix:
 
     def add_pixel(self, input_pixel: DrawablePixel):
         if 0 <= input_pixel.x <= self.matrix_size_x and 0 <= input_pixel.y <= self.matrix_size_y:
-            self.internalStorage.setdefault((input_pixel.x, input_pixel.y), input_pixel.color)
+            self.internalStorage.update({(input_pixel.x, input_pixel.y): input_pixel.color})
 
     def __init__(self, dimension_x, dimesion_y):
 
@@ -45,3 +45,6 @@ class PixelMatrix:
 
     def clear_matrix(self):
         self.internalStorage.clear()
+
+    def __len__(self):
+        return len(self.internalStorage)

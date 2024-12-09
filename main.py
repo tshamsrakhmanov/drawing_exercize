@@ -11,17 +11,22 @@ HEIGHT = settings.height
 
 
 def main():
+    # window setup
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
+    # window name and icon setup
     pygame.display.set_caption('Graphics Module')
-    programIcon = pygame.image.load('extras/icon.png')
-    pygame.display.set_icon(programIcon)
+    program_icon = pygame.image.load('extras/icon.png')
+    pygame.display.set_icon(program_icon)
 
+    # condition of running setup
     clock = pygame.time.Clock()
     running = True
 
-    PixelMatrixPM = PixelMatrix(WIDTH, HEIGHT)
+    # drawing engine init (cache init, borders init)
+    pixel_matrix = PixelMatrix(WIDTH, HEIGHT)
 
+    # main loop
     while running:
 
         # condition check to quit application
@@ -32,19 +37,21 @@ def main():
         #  reset screen - so fill it black
         screen.fill(COLOR_BLACK)
 
-        draw_window(PixelMatrixPM)
+        # calculate exact pixels, which needs to be displayed
+        draw_window(pixel_matrix)
 
-        # print(PixelMatrixPM)
-
-        for coordinates, color in PixelMatrixPM:
+        # draw pixels, stored in PixelMatrix
+        for coordinates, color in pixel_matrix:
             screen.set_at((coordinates[0], coordinates[1]), color)
 
+        # draw screen (full)
         pygame.display.flip()
 
-        # frames per sec drawing
+        # wait time to synchronize to FPS
         clock.tick(120)
 
-        PixelMatrixPM.clear_matrix()
+        # clear PixelMatrix cache of used pixels
+        pixel_matrix.clear_matrix()
 
 
 if __name__ == '__main__':
