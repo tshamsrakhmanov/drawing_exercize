@@ -1,11 +1,10 @@
 import pygame
-
-import settings
 from additional_types import *
 from colors import *
+import settings
 
 
-def draw_circle(point: Point, radius: int, pixel_array: pygame.pixelarray, input_color):
+def draw_circle(point: Point, radius: int, pixel_array: pygame.pixelarray, input_color: RGBColor = COLOR_WHITE):
     """
     Add circle (filled) to the screen
     :param point: Center point of circle
@@ -27,8 +26,9 @@ def draw_circle(point: Point, radius: int, pixel_array: pygame.pixelarray, input
                 if is_in_array(-dx + point.x, -dy + point.y):
                     pixel_array[-dx + point.x, -dy + point.y] = input_color
 
+
 def draw_point(input_point: Point, pixel_array: pygame.PixelArray,
-               input_color: RGBColor = (255, 255, 255)):
+               input_color: RGBColor = COLOR_WHITE):
     """
     Add point drawing to the screen
     :param input_point: Point ( coordinates) to use as a center for drawing
@@ -42,6 +42,32 @@ def draw_point(input_point: Point, pixel_array: pygame.PixelArray,
     pixel_array[input_point.x, input_point.y] = input_color
     pixel_array[input_point.x, input_point.y - 1] = input_color
     pixel_array[input_point.x, input_point.y + 1] = input_color
+
+
+def draw_circle_centerline(point_center: Point, radius: int, pixel_array: pygame.PixelArray,
+                           color: RGBColor = COLOR_WHITE):
+
+    # draw center point of the circle
+    pixel_array[point_center.x, point_center.y] = color
+
+    x = radius
+    y = 0
+    err = 0
+    while x >= y:
+        pixel_array[point_center.x + x, point_center.y + y] = color
+        pixel_array[point_center.x + y, point_center.y + x] = color
+        pixel_array[point_center.x - y, point_center.y + x] = color
+        pixel_array[point_center.x - x, point_center.y + y] = color
+        pixel_array[point_center.x - x, point_center.y - y] = color
+        pixel_array[point_center.x - y, point_center.y - x] = color
+        pixel_array[point_center.x + y, point_center.y - x] = color
+        pixel_array[point_center.x + x, point_center.y - y] = color
+
+        y += 1
+        err += 1 + 2 * y
+        if 2 * (err - x) + 1 > 0:
+            x -= 1
+            err += 1 - 2 * x
 
 
 def draw_line(point_start: Point, point_end: Point, pixel_array: pygame.PixelArray,
@@ -97,7 +123,7 @@ def tdc(x_input: int, y_input: int):
     (center of a screen as 0;0 and x from left to right, y from bottom to top)
     :param x_input: Coordinate of X in Decard coordinate system
     :param y_input: Coordinate of Y in Decard coordinate system
-    :return: tuple (a,b) where a - x-coord in screen coordinate system, b - y-coord in screen coordinate system
+    :return: tuple (A,B) where A - x-coord in screen coordinate system, b - y-coord in screen coordinate system
     """
 
     return int(settings.width / 2) + x_input, int(settings.height / 2) - y_input
