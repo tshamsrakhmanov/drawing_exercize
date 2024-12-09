@@ -77,8 +77,8 @@ def draw_window(pixel_array: pygame.pixelarray):
         for _ in range(count):
             triplets_generation()
 
-    # adjustable_triangle()
-    random_lines(100)
+    adjustable_triangle()
+    # random_lines(100)
     # random_circles(100)
     # test_of_centerline_circle()
     # random_full_circles(300)

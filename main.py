@@ -1,10 +1,5 @@
-import random
-import pygame
 from drawing_functions import *
-from additional_types import *
 from drawing_engine import draw_window
-import time
-import math
 
 
 def main():
