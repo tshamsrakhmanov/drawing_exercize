@@ -2,7 +2,7 @@ from drawing_functions import *
 import pygame
 
 
-def draw_window(pixel_array: pygame.pixelarray):
+def draw_window(pixel_array: pygame.pixelarray, objects_notation: list):
     def adjustable_triangle():
 
         radius = 15
@@ -77,9 +77,15 @@ def draw_window(pixel_array: pygame.pixelarray):
         for _ in range(count):
             triplets_generation()
 
-    adjustable_triangle()
+    # adjustable_triangle()
     # random_lines(100)
     # random_circles(100)
     # test_of_centerline_circle()
     # random_full_circles(300)
     # triplets(15)
+
+    for object_name, coordinate in objects_notation.items():
+        if str(object_name).startswith('Circle'):
+            draw_circle_centerline(coordinate, 15, pixel_array, COLOR_RED)
+        if str(object_name).startswith('Square'):
+            draw_circle_centerline(coordinate, 30, pixel_array, COLOR_GREEN)

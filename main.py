@@ -2,8 +2,10 @@ from drawing_functions import *
 from drawing_engine import draw_window
 
 
-def main():
+# from additional_types
 
+
+def main():
     pygame.init()
     # window setup
     screen = pygame.display.set_mode((settings.width, settings.height))
@@ -23,6 +25,11 @@ def main():
 
     running = 1
 
+    objects_engine = ObjectsEngine()
+
+    mouse_up = False
+    mouse_pos = ()
+
     # main loop
     while running:
 
@@ -30,12 +37,22 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = 0
+            elif event.type == pygame.MOUSEBUTTONUP:
+                mouse_up = True
+
+        mouse_pos = pygame.mouse.get_pos()
 
         pixel_array = pygame.PixelArray(screen)
 
         screen.fill(COLOR_BLACK)
 
-        draw_window(pixel_array)
+        objects_engine.__add__(SomeObject('Circle'), Point(300, 300))
+
+        objects_notation = objects_engine.get_objects_notation(mouse_up, mouse_pos)
+
+        # print(objects_notation)
+
+        draw_window(pixel_array, objects_notation)
 
         pixel_array.close()
 
@@ -49,6 +66,9 @@ def main():
             if dt_sum > 0:
                 pygame.display.set_caption("FPS: " + str(round(len(dt_list) / sum(dt_list) * 1000)))
         count += 1
+
+        # resetting interruptors
+        mouse_up = False
 
 
 if __name__ == '__main__':

@@ -46,8 +46,9 @@ def draw_point(input_point: Point, pixel_array: pygame.PixelArray,
 
 def draw_circle_centerline(point_center: Point, radius: int, pixel_array: pygame.PixelArray,
                            color: RGBColor = COLOR_WHITE):
+
     # draw center point of the circle
-    pixel_array[point_center.x, point_center.y] = color
+    # pixel_array[point_center.x, point_center.y] = color
 
     x = radius
     y = 0
