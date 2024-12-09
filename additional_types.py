@@ -38,12 +38,12 @@ class ObjectsEngine:
             temp_object_coordinates = self.objects_notation['Circle']
 
             if math.sqrt((temp_object_coordinates.x - mouse_pos[0]) ** 2 + (
-                    temp_object_coordinates.y - mouse_pos[1]) ** 2) < 100 and self.readiness is True:
-                self.__add__(SomeObject('Square'), Point(250, 250))
+                    temp_object_coordinates.y - mouse_pos[1]) ** 2) < 16 and self.readiness is True:
+                self.__add__(SomeObject('Square'), Point(300, 300))
                 self.readiness = False
 
             if math.sqrt((temp_object_coordinates.x - mouse_pos[0]) ** 2 + (
-                    temp_object_coordinates.y - mouse_pos[1]) ** 2) > 100 and self.readiness is False:
+                    temp_object_coordinates.y - mouse_pos[1]) ** 2) > 16 and self.readiness is False:
                 self.remove('Square')
                 self.readiness = True
 

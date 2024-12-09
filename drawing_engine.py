@@ -88,4 +88,4 @@ def draw_window(pixel_array: pygame.pixelarray, objects_notation: list):
         if str(object_name).startswith('Circle'):
             draw_circle_centerline(coordinate, 15, pixel_array, COLOR_RED)
         if str(object_name).startswith('Square'):
-            draw_circle_centerline(coordinate, 30, pixel_array, COLOR_GREEN)
+            draw_circle_centerline(coordinate, 20, pixel_array, COLOR_GREEN)
