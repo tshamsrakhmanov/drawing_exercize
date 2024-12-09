@@ -1,5 +1,12 @@
 import random
 
+
+class RGBColor:
+    r: int
+    g: int
+    b: int
+
+
 COLOR_RED = (255, 0, 0)
 COLOR_GREEN = (0, 255, 0)
 COLOR_BLUE = (0, 0, 255)

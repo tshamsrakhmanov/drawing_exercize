@@ -1,6 +1,7 @@
-from drawing_functions import *
-from drawing_engine import draw_window
-
+import settings
+from DrawingEngine import draw_window
+from ObjectEngine import *
+import pygame
 
 # from additional_types
 
@@ -27,6 +28,9 @@ def main():
 
     objects_engine = ObjectsEngine()
 
+    objects_engine.add_object(Circle(Dot(150, 150), 30, COLOR_RANDOM()))
+    objects_engine.add_object(Dot(150, 150, COLOR_RANDOM()))
+
     mouse_up = False
     mouse_pos = ()
 
@@ -46,13 +50,11 @@ def main():
 
         screen.fill(COLOR_BLACK)
 
-        objects_engine.__add__(SomeObject('Circle'), Point(300, 300))
+        objects_state = objects_engine.update_objects_state(mouse_up, mouse_pos)
 
-        objects_notation = objects_engine.get_objects_notation(mouse_up, mouse_pos)
+        print(objects_state)
 
-        # print(objects_notation)
-
-        draw_window(pixel_array, objects_notation)
+        draw_window(pixel_array, objects_state)
 
         pixel_array.close()
 
