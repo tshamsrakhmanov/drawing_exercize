@@ -23,26 +23,25 @@ class DrawablePixel:
 
 @dataclass
 class PixelMatrix:
-    internalStorage: list
+    internalStorage: dict
     matrix_size_x: int
     matrix_size_y: int
 
-    def addPixel(self, input_pixel: DrawablePixel):
-
+    def add_pixel(self, input_pixel: DrawablePixel):
         if 0 <= input_pixel.x <= self.matrix_size_x and 0 <= input_pixel.y <= self.matrix_size_y:
-            self.internalStorage.append(input_pixel)
+            self.internalStorage.setdefault((input_pixel.x, input_pixel.y), input_pixel.color)
 
-    def __init__(self, dimention_x, dimetion_y):
+    def __init__(self, dimension_x, dimesion_y):
 
-        if dimention_x > 0 and dimetion_y:
-            self.matrix_size_x = dimention_x
-            self.matrix_size_y = dimetion_y
-            self.internalStorage = []
+        if dimension_x > 0 and dimesion_y:
+            self.matrix_size_x = dimension_x
+            self.matrix_size_y = dimesion_y
+            self.internalStorage = dict()
         else:
             raise ValueError('No value provided for screen resolution')
 
     def __iter__(self):
-        return iter(self.internalStorage)
+        return iter(self.internalStorage.items())
 
-    def clearMatrix(self):
+    def clear_matrix(self):
         self.internalStorage.clear()

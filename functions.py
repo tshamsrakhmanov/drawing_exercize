@@ -13,10 +13,10 @@ def draw_circle(
     for dx in range(radius):
         for dy in range(radius):
             if dx ** 2 + dy ** 2 <= radius ** 2:
-                pixel_matrix.addPixel(DrawablePixel(dx + point.x, dy + point.y, input_color))
-                pixel_matrix.addPixel(DrawablePixel(dx + point.x, -dy + point.y, input_color))
-                pixel_matrix.addPixel(DrawablePixel(-dx + point.x, dy + point.y, input_color))
-                pixel_matrix.addPixel(DrawablePixel(-dx + point.x, -dy + point.y, input_color))
+                pixel_matrix.add_pixel(DrawablePixel(dx + point.x, dy + point.y, input_color))
+                pixel_matrix.add_pixel(DrawablePixel(dx + point.x, -dy + point.y, input_color))
+                pixel_matrix.add_pixel(DrawablePixel(-dx + point.x, dy + point.y, input_color))
+                pixel_matrix.add_pixel(DrawablePixel(-dx + point.x, -dy + point.y, input_color))
 
 
 def draw_point(
@@ -25,11 +25,11 @@ def draw_point(
         input_color: RGBColor = (255, 255, 255)
         ):
 
-    pixel_matrix.addPixel(DrawablePixel(input_point.x + 1, input_point.y, input_color))
-    pixel_matrix.addPixel(DrawablePixel(input_point.x - 1, input_point.y, input_color))
-    pixel_matrix.addPixel(DrawablePixel(input_point.x, input_point.y, input_color))
-    pixel_matrix.addPixel(DrawablePixel(input_point.x, input_point.y - 1, input_color))
-    pixel_matrix.addPixel(DrawablePixel(input_point.x, input_point.y + 1, input_color))
+    pixel_matrix.add_pixel(DrawablePixel(input_point.x + 1, input_point.y, input_color))
+    pixel_matrix.add_pixel(DrawablePixel(input_point.x - 1, input_point.y, input_color))
+    pixel_matrix.add_pixel(DrawablePixel(input_point.x, input_point.y, input_color))
+    pixel_matrix.add_pixel(DrawablePixel(input_point.x, input_point.y - 1, input_color))
+    pixel_matrix.add_pixel(DrawablePixel(input_point.x, input_point.y + 1, input_color))
 
 
 def draw_line(
@@ -58,7 +58,7 @@ def draw_line(
     error = dx + dy
 
     while True:
-        pixel_matrix.addPixel(DrawablePixel(x0, y0, color_of_line))
+        pixel_matrix.add_pixel(DrawablePixel(x0, y0, color_of_line))
 
         if x0 == x1 and y0 == y1:
             break
