@@ -2,6 +2,7 @@ import settings
 from GeometryClasses import *
 from settings import *
 import pygame
+from InteractiveObjects import *
 
 
 def draw_window(pixel_array: pygame.pixelarray, objects_notation: dict):
@@ -30,15 +31,15 @@ def draw_window(pixel_array: pygame.pixelarray, objects_notation: dict):
     def random_lines(count):
         for _ in range(count):
             draw_line(Dot(random.randint(10, pixel_array.surface.get_size()[0] - 11),
-                            random.randint(10, pixel_array.surface.get_size()[1] - 11)),
+                          random.randint(10, pixel_array.surface.get_size()[1] - 11)),
                       Dot(random.randint(10, pixel_array.surface.get_size()[0] - 11),
-                            random.randint(10, pixel_array.surface.get_size()[1] - 11)), pixel_array, COLOR_BLUE, True,
+                          random.randint(10, pixel_array.surface.get_size()[1] - 11)), pixel_array, COLOR_BLUE, True,
                       COLOR_RANDOM(), COLOR_RANDOM())
 
     def random_circles(count):
         for _ in range(count):
             p0 = Dot(random.randint(75, pixel_array.surface.get_size()[0] - 76),
-                       random.randint(75, pixel_array.surface.get_size()[1] - 76))
+                     random.randint(75, pixel_array.surface.get_size()[1] - 76))
             draw_circle(p0, random.randint(3, 73), pixel_array, COLOR_RANDOM())
 
     def test_of_centerline_circle():
@@ -53,7 +54,7 @@ def draw_window(pixel_array: pygame.pixelarray, objects_notation: dict):
 
         for _ in range(count):
             p0 = Dot(random.randint(max_radius + gap, pixel_array.surface.get_size()[0] - (max_radius + gap)),
-                       random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
+                     random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
             draw_circle_centerline(p0, random.randint(min_radius, max_radius), pixel_array, COLOR_RANDOM())
 
     def triplets(count):
@@ -63,11 +64,11 @@ def draw_window(pixel_array: pygame.pixelarray, objects_notation: dict):
             gap = 1
 
             p0 = Dot(random.randint(max_radius + gap, pixel_array.surface.get_size()[0] - (max_radius + gap)),
-                       random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
+                     random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
             p1 = Dot(random.randint(max_radius + gap, pixel_array.surface.get_size()[0] - (max_radius + gap)),
-                       random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
+                     random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
             p2 = Dot(random.randint(max_radius + gap, pixel_array.surface.get_size()[0] - (max_radius + gap)),
-                       random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
+                     random.randint(max_radius + gap, pixel_array.surface.get_size()[1] - (max_radius + gap)))
 
             draw_circle_centerline(p0, random.randint(min_radius, max_radius), pixel_array, COLOR_WHITE)
             draw_circle_centerline(p1, random.randint(min_radius, max_radius), pixel_array, COLOR_WHITE)
@@ -90,8 +91,17 @@ def draw_window(pixel_array: pygame.pixelarray, objects_notation: dict):
 
         if isinstance(obj, Dot):
             draw_point(Dot(obj.x, obj.y), pixel_array, obj.color)
+        elif isinstance(obj, InteractiveCircle):
+            match obj.state:
+                case True:
+                    draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                                           obj.radius, pixel_array, obj.color)
+                case False:
+                    draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                                           obj.radius + 15, pixel_array, COLOR_RED)
         elif isinstance(obj, Circle):
             draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y), obj.radius, pixel_array, obj.color)
+
 
 
 def draw_circle(point: Dot, radius: int, pixel_array: pygame.pixelarray, input_color: RGBColor = COLOR_WHITE):
@@ -136,7 +146,6 @@ def draw_point(input_point: Dot, pixel_array: pygame.PixelArray,
 
 def draw_circle_centerline(point_center: Dot, radius: int, pixel_array: pygame.PixelArray,
                            color: RGBColor):
-
     x = radius
     y = 0
     err = 0

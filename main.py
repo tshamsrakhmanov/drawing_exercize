@@ -2,8 +2,7 @@ import settings
 from DrawingEngine import draw_window
 from ObjectEngine import *
 import pygame
-
-# from additional_types
+import os
 
 
 def main():
@@ -28,11 +27,20 @@ def main():
 
     objects_engine = ObjectsEngine()
 
-    objects_engine.add_object(Circle(Dot(150, 150), 30, COLOR_RANDOM()))
-    objects_engine.add_object(Dot(150, 150, COLOR_RANDOM()))
+    for _ in range(10):
+        i_circ = InteractiveCircle(i_dot=Dot(random.randint(100, settings.width - 100),
+                                             random.randint(100, settings.height - 100)), i_radius=30,
+                                   i_color=COLOR_WHITE)
+        objects_engine.add_object(i_circ)
+
+    i_circ2 = Circle(i_dot=Dot(random.randint(100, settings.width - 100),
+                                         random.randint(100, settings.height - 100)), i_radius=30,
+                               i_color=COLOR_GREEN)
+    objects_engine.add_object(i_circ2)
 
     mouse_up = False
     mouse_pos = ()
+
 
     # main loop
     while running:
@@ -41,8 +49,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = 0
-            elif event.type == pygame.MOUSEBUTTONUP:
-                mouse_up = True
 
         mouse_pos = pygame.mouse.get_pos()
 
@@ -50,11 +56,9 @@ def main():
 
         screen.fill(COLOR_BLACK)
 
-        objects_state = objects_engine.update_objects_state(mouse_up, mouse_pos)
+        temp1 = objects_engine.objects_state(mouse_pos)
 
-        print(objects_state)
-
-        draw_window(pixel_array, objects_state)
+        draw_window(pixel_array, temp1)
 
         pixel_array.close()
 

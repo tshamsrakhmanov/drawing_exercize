@@ -28,11 +28,10 @@ class Line(Geometry):
 
 
 class Circle(Geometry):
-    def __init__(self, dot1: Dot, i_radius: int, i_color: RGBColor = COLOR_WHITE):
-        super().__init__(i_color)
-        self.dot_start = dot1
+    def __init__(self, i_dot: Dot, i_radius: int, **kwargs):
+        super().__init__(**kwargs)
+        self.dot_start = i_dot
         self.radius = i_radius
-        self.color = i_color
 
     def __repr__(self):
         return f'Cicrle({self.dot_start.x},{self.dot_start.y} - {self.radius} - {self.color})'
