@@ -1,48 +1,72 @@
-import settings
-from DrawingEngine import draw_window
-from ObjectEngine import *
+import settings.resolution
+from engines.DrawingEngine import *
+from engines.ObjectEngine import *
 import pygame
-import os
 
 
 def main():
-    pygame.init()
-    # window setup
-    screen = pygame.display.set_mode((settings.width, settings.height))
-    # surface = pygame.surface
+    # 1. resolution setup
+    WIDTH = settings.resolution.width
+    HEIGHT = settings.resolution.height
 
-    # window name and icon setup
-    # pygame.display.set_caption('Graphics Module')
+    # 2. pygame setup
+    pygame.init()
+
+    # 3. window setup
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+    # 4. window name and icon setup
     program_icon = pygame.image.load('extras/icon.png')
     pygame.display.set_icon(program_icon)
 
-    # condition of running setup
+    # 5. condition of running setup
     clock = pygame.time.Clock()
 
+    # 6. FPS init
     clock.tick()
     count = 0
     dt_list = []
 
+    # 7. Condition of run init
     running = 1
 
-    objects_engine = ObjectsEngine()
+    # 8. Objects engine init
+    oe = ObjectsEngine()
 
-    for _ in range(10):
-        i_circ = InteractiveCircle(i_dot=Dot(random.randint(100, settings.width - 100),
-                                             random.randint(100, settings.height - 100)), i_radius=30,
-                                   i_color=COLOR_WHITE)
-        objects_engine.add_object(i_circ)
+    # 9. Drawing engine init
+    de = DrawingEngine()
 
-    i_circ2 = Circle(i_dot=Dot(random.randint(100, settings.width - 100),
-                                         random.randint(100, settings.height - 100)), i_radius=30,
-                               i_color=COLOR_GREEN)
-    objects_engine.add_object(i_circ2)
+    # #########################
+    # STATIC OBJECT ADD HERE
+    # #########################
 
-    mouse_up = False
-    mouse_pos = ()
+    # 8.1 Static objects declaration - TEST FUNCTION
+    objects_buffer = []
 
+    for _ in range(2):
+        dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+        dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+        i_circ = InteractiveCircle(i_dot=dot1, i_radius=30, i_color=COLOR_WHITE)
+        i_circ2 = InteractiveCircle(i_dot=dot2, i_radius=30, i_color=COLOR_WHITE)
+        i_line = Line(dot1, dot2, COLOR_WHITE, True, COLOR_RED, COLOR_RED)
+        objects_buffer.append(i_circ)
+        objects_buffer.append(i_circ2)
+        objects_buffer.append(i_line)
 
-    # main loop
+    i_circ2 = Circle(i_dot=Dot(random.randint(100, WIDTH - 100),
+                               random.randint(100, HEIGHT - 100)), i_radius=30,
+                     i_color=COLOR_GREEN)
+    objects_buffer.append(i_circ2)
+
+    # 8.2 Test objects transferred to objects engine
+    for pos in objects_buffer:
+        oe.add_object(pos)
+
+    # ###########################
+    # END
+    # ###########################
+
+    # 9. Main loop
     while running:
 
         # condition check to quit application
@@ -56,9 +80,9 @@ def main():
 
         screen.fill(COLOR_BLACK)
 
-        temp1 = objects_engine.objects_state(mouse_pos)
+        oe.update_set_of_objects(mouse_pos)
 
-        draw_window(pixel_array, temp1)
+        de.draw_window(pixel_array, oe.get_set_of_objects())
 
         pixel_array.close()
 
@@ -67,14 +91,11 @@ def main():
         dt_list += [clock.tick()]
         if len(dt_list) > 100:
             del dt_list[0]
-        if (count % 100 == 0):
+        if count % 100 == 0:
             dt_sum = sum(dt_list)
             if dt_sum > 0:
                 pygame.display.set_caption("FPS: " + str(round(len(dt_list) / sum(dt_list) * 1000)))
         count += 1
-
-        # resetting interruptors
-        mouse_up = False
 
 
 if __name__ == '__main__':

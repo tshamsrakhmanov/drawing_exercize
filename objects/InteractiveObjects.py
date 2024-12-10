@@ -1,4 +1,4 @@
-from GeometryClasses import *
+from objects.GeometryObjects import *
 
 
 class InteractiveObject:
@@ -12,6 +12,7 @@ class InteractiveCircle(Circle, InteractiveObject):
 
     def __repr__(self):
         return f'{str(self.__hash__())[-4:]} {'0' if self.state else '1'}'
+
 
 class InteractiveDot(InteractiveObject):
     pass
