@@ -43,16 +43,28 @@ def main():
     # 8.1 Static objects declaration - TEST FUNCTION
     objects_buffer = []
 
-    for _ in range(5):
+    # dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+    # i_circ = InteractiveCircle(i_dot=dot1, i_radius=30, i_color=COLOR_WHITE)
+    #
+    # objects_buffer.append(i_circ)
+    #
+    for _ in range(1):
         dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
         dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-        i_circ = InteractiveCircle(i_dot=dot1, i_radius=30, i_color=COLOR_WHITE)
-        i_circ2 = InteractiveCircle(i_dot=dot2, i_radius=30, i_color=COLOR_WHITE)
-        i_line = Line(dot1, dot2, COLOR_WHITE, False, COLOR_RED, COLOR_RED)
-        objects_buffer.append(i_circ)
+        dot3 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+        i_circ1 = InteractiveCircle(i_dot=dot1, i_radius=15, i_color=COLOR_WHITE)
+        i_circ2 = InteractiveCircle(i_dot=dot2, i_radius=15, i_color=COLOR_WHITE)
+        i_circ3 = InteractiveCircle(i_dot=dot3, i_radius=15, i_color=COLOR_WHITE)
+        i_line1 = Line(dot1, dot2, COLOR_RED, False, COLOR_RED, COLOR_RED)
+        i_line2 = Line(dot2, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
+        i_line3 = Line(dot1, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
+        objects_buffer.append(i_circ1)
         objects_buffer.append(i_circ2)
-        objects_buffer.append(i_line)
-
+        objects_buffer.append(i_circ3)
+        objects_buffer.append(i_line1)
+        objects_buffer.append(i_line2)
+        objects_buffer.append(i_line3)
+    #
     # 8.2 Test objects transferred to objects engine
     for pos in objects_buffer:
         oe.add_object(pos)

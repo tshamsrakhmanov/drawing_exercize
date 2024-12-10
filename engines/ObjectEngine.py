@@ -22,23 +22,9 @@ class ObjectsEngine:
         :param mouse_down: detection of mouse press button
         :return: None
         """
-        # INTERRUPT BY MOUSE CLICK
-        if mouse_up:
 
-            # changing ACTIVE | NON-ACTIVE for Interactive circles with mouse click
-            for obj in filter(lambda x: isinstance(x, InteractiveCircle), self.set_of_objects):
-                distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
-
-                if distance < 30:
-                    if obj.active:
-                        obj.active = False
-                    else:
-                        obj.active = True
-
-                # self.remove_object(obj)
-
-        # HOVERING OF INTERACTIVE CIRCLES
         for obj in filter(lambda x: isinstance(x, InteractiveCircle), self.set_of_objects):
+            obj: InteractiveCircle
             distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
 
             if distance < obj.radius:
@@ -51,6 +37,10 @@ class ObjectsEngine:
                         obj.focus_active_ready = False
                         obj.color = obj.color_active_focused
 
+            if obj.movable and obj.active:
+                obj.dot_start.x = mouse_pos[0]
+                obj.dot_start.y = mouse_pos[1]
+
             if distance > obj.radius:
                 if obj.active is False:
                     obj.color = obj.color_non_active_non_focused
@@ -58,6 +48,17 @@ class ObjectsEngine:
                 if obj.active is True:
                     obj.color = obj.color_active_non_focused
                     obj.focus_active_ready = True
+
+            if mouse_up:
+                if distance < obj.radius:
+                    if obj.active:
+                        obj.active = False
+                    else:
+                        obj.active = True
+
+            # if distance < obj.radius and obj.movable and obj.active:
+            #     obj.dot_start.x = mouse_pos[0]
+            #     obj.dot_start.y = mouse_pos[1]
 
     def get_set_of_objects(self):
         """

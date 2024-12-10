@@ -22,7 +22,7 @@ class Line(Geometry):
         super().__init__(i_color)
         self.dot_start = i_dot1
         self.dot_end = i_dot2
-        self.color = COLOR_WHITE
+        self.color = i_color
         self.is_pointed = is_pointed
         self.color_point_start = color_point_start
         self.color_point_end = color_point_end

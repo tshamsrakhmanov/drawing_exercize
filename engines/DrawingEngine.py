@@ -19,7 +19,7 @@ class DrawingEngine:
                 match obj.active:
                     case True:
                         self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
-                                                    obj.radius + 15, pixel_array_input, obj.color)
+                                                    obj.radius * 2, pixel_array_input, obj.color)
                     case False:
                         self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
                                                     obj.radius, pixel_array_input, obj.color)

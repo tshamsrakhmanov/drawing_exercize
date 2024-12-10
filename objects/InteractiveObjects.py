@@ -6,7 +6,6 @@ class InteractiveObject:
 
 
 class InteractiveCircle(Circle, InteractiveObject):
-
     focus_color = COLOR_ORANGE
     base_color = COLOR_WHITE
 
@@ -20,6 +19,7 @@ class InteractiveCircle(Circle, InteractiveObject):
         self.active = False  # ACTIVE | NON-ACTIVE
         self.focus_non_active_ready = True
         self.focus_active_ready = True
+        self.movable = True
 
     def __repr__(self):
         return f'{str(self.__hash__())[-4:]} {'0' if self.active else '1'}'
