@@ -15,7 +15,7 @@ class DrawingEngine:
 
             if isinstance(obj, Dot):
                 self.draw_point(Dot(obj.x, obj.y), pixel_array_input, obj.color)
-            elif isinstance(obj, InteractiveCircle):
+            elif isinstance(obj, MovableCircle):
                 match obj.active:
                     case True:
                         self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
@@ -23,6 +23,9 @@ class DrawingEngine:
                     case False:
                         self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
                                                     obj.radius, pixel_array_input, obj.color)
+            elif isinstance(obj, GradientCircle):
+                self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                                            obj.actual_size, pixel_array_input, obj.color)
             elif isinstance(obj, Circle):
                 self.draw_circle_centerline(
                     Dot(obj.dot_start.x, obj.dot_start.y), obj.radius, pixel_array_input, obj.color)

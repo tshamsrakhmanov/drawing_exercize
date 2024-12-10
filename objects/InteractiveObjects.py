@@ -5,7 +5,7 @@ class InteractiveObject:
     pass
 
 
-class InteractiveCircle(Circle, InteractiveObject):
+class MovableCircle(Circle, InteractiveObject):
     focus_color = COLOR_ORANGE
     base_color = COLOR_WHITE
 
@@ -21,8 +21,12 @@ class InteractiveCircle(Circle, InteractiveObject):
         self.focus_active_ready = True
         self.movable = True
 
-    def __repr__(self):
-        return f'{str(self.__hash__())[-4:]} {'0' if self.active else '1'}'
+
+class GradientCircle(Circle, InteractiveObject):
+
+    def __init__(self, **kwargs):
+        Circle.__init__(self, **kwargs)
+        self.actual_size = 0
 
 
 class InteractiveDot(InteractiveObject):
