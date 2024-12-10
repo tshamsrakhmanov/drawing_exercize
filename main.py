@@ -48,7 +48,7 @@ def main():
         dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
         i_circ = InteractiveCircle(i_dot=dot1, i_radius=30, i_color=COLOR_WHITE)
         i_circ2 = InteractiveCircle(i_dot=dot2, i_radius=30, i_color=COLOR_WHITE)
-        i_line = Line(dot1, dot2, COLOR_WHITE, True, COLOR_RED, COLOR_RED)
+        i_line = Line(dot1, dot2, COLOR_WHITE, False, COLOR_RED, COLOR_RED)
         objects_buffer.append(i_circ)
         objects_buffer.append(i_circ2)
         objects_buffer.append(i_line)
@@ -83,7 +83,7 @@ def main():
 
         screen.fill(COLOR_BLACK)
 
-        oe.update_set_of_objects(mouse_pos, mouse_up, mouse_down, count)
+        oe.update_set_of_objects(mouse_pos, mouse_up, mouse_down)
 
         de.draw_window(pixel_array, oe.get_set_of_objects())
 

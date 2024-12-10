@@ -6,6 +6,7 @@ class InteractiveObject:
 
 
 class InteractiveCircle(Circle, InteractiveObject):
+
     focus_color = COLOR_ORANGE
     base_color = COLOR_WHITE
 
@@ -16,7 +17,7 @@ class InteractiveCircle(Circle, InteractiveObject):
 
     def __init__(self, **kwargs):
         Circle.__init__(self, **kwargs)
-        self.active = True  # ACTIVE | NON-ACTIVE
+        self.active = False  # ACTIVE | NON-ACTIVE
         self.focus_non_active_ready = True
         self.focus_active_ready = True
 

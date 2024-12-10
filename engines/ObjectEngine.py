@@ -1,20 +1,31 @@
 import math
 
-from objects.InteractiveObjects import *
+from objects.InteractiveObjects import InteractiveCircle
+from objects.GeometryObjects import Geometry
 
 
 class ObjectsEngine:
+
     def __init__(self):
+        """
+        Init of objects engine
+         - create empty set of objects
+         - t.b.d. later with additional info
+        """
         self.set_of_objects = set()
-        self.readiness = True
-        self.counter_mouse = 0
-        self.click = False
 
-    def update_set_of_objects(self, mouse_pos: tuple, mouse_up: bool, mouse_down: bool, counter: int):
-
-        # changing ACTIVE | NON-ACTIVE for Interactive circles with mouse click
+    def update_set_of_objects(self, mouse_pos: tuple, mouse_up: bool, mouse_down: bool):
+        """
+        By evoking this method ObjectEngine will update status and all relevant parameters of all objects in modeling space
+        :param mouse_pos: provide coordinates of mouse position on the screen
+        :param mouse_up: detection of mouse release button
+        :param mouse_down: detection of mouse press button
+        :return: None
+        """
+        # INTERRUPT BY MOUSE CLICK
         if mouse_up:
 
+            # changing ACTIVE | NON-ACTIVE for Interactive circles with mouse click
             for obj in filter(lambda x: isinstance(x, InteractiveCircle), self.set_of_objects):
                 distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
 
@@ -24,7 +35,9 @@ class ObjectsEngine:
                     else:
                         obj.active = True
 
-        # changing focus on active | non-active Interactive circles
+                # self.remove_object(obj)
+
+        # HOVERING OF INTERACTIVE CIRCLES
         for obj in filter(lambda x: isinstance(x, InteractiveCircle), self.set_of_objects):
             distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
 
@@ -46,8 +59,11 @@ class ObjectsEngine:
                     obj.color = obj.color_active_non_focused
                     obj.focus_active_ready = True
 
-
     def get_set_of_objects(self):
+        """
+        Set of objects will be returned
+        :return:Set of objects
+        """
         return self.set_of_objects
 
     def add_object(self, input_object: Geometry):
