@@ -43,7 +43,7 @@ def main():
     # 8.1 Static objects declaration - TEST FUNCTION
     objects_buffer = []
 
-    for _ in range(2):
+    for _ in range(5):
         dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
         dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
         i_circ = InteractiveCircle(i_dot=dot1, i_radius=30, i_color=COLOR_WHITE)
@@ -53,11 +53,6 @@ def main():
         objects_buffer.append(i_circ2)
         objects_buffer.append(i_line)
 
-    i_circ2 = Circle(i_dot=Dot(random.randint(100, WIDTH - 100),
-                               random.randint(100, HEIGHT - 100)), i_radius=30,
-                     i_color=COLOR_GREEN)
-    objects_buffer.append(i_circ2)
-
     # 8.2 Test objects transferred to objects engine
     for pos in objects_buffer:
         oe.add_object(pos)
@@ -66,6 +61,10 @@ def main():
     # END
     # ###########################
 
+    # 8.3 interuptors declaration
+    mouse_up = False
+    mouse_down = False
+
     # 9. Main loop
     while running:
 
@@ -73,6 +72,10 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = 0
+            elif event.type == pygame.MOUSEBUTTONUP:
+                mouse_up = True
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_down = True
 
         mouse_pos = pygame.mouse.get_pos()
 
@@ -80,7 +83,7 @@ def main():
 
         screen.fill(COLOR_BLACK)
 
-        oe.update_set_of_objects(mouse_pos)
+        oe.update_set_of_objects(mouse_pos, mouse_up, mouse_down, count)
 
         de.draw_window(pixel_array, oe.get_set_of_objects())
 
@@ -96,6 +99,9 @@ def main():
             if dt_sum > 0:
                 pygame.display.set_caption("FPS: " + str(round(len(dt_list) / sum(dt_list) * 1000)))
         count += 1
+
+        mouse_up = False
+        mouse_down = False
 
 
 if __name__ == '__main__':
