@@ -101,6 +101,7 @@ class ObjectsEngine:
 
             # snapping Interactive Circle to mouse cursor while active = True
             if obj.movable and obj.active:
+                obj.color = obj.color_active_focused
                 obj.dot_start.x = mouse_pos[0]
                 obj.dot_start.y = mouse_pos[1]
 

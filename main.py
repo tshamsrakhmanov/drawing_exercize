@@ -14,7 +14,7 @@ def main():
 
     # 3. window setup
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.mouse.set_visible(False)
+    # pygame.mouse.set_visible(False)
 
     # 4. window name and icon setup
     program_icon = pygame.image.load('extras/icon.png')
@@ -49,33 +49,31 @@ def main():
     #
     # objects_buffer.append(i_circ)
     #
-    # for _ in range(1):
-    #     dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-    #     dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-    #     dot3 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-    #     dot4 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-    #     i_circ1 = MovableCircle(i_dot=dot1, i_radius=15, i_color=COLOR_WHITE)
-    #     i_circ2 = MovableCircle(i_dot=dot2, i_radius=15, i_color=COLOR_WHITE)
-    #     i_circ3 = MovableCircle(i_dot=dot3, i_radius=15, i_color=COLOR_WHITE)
-    #     i_circ4 = GradientCircle(i_dot=dot4, i_radius=30, min_size=30, max_size=40, i_color=COLOR_WHITE)
-    #     i_line1 = Line(dot1, dot2, COLOR_RED, False, COLOR_RED, COLOR_RED)
-    #     i_line2 = Line(dot2, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
-    #     i_line3 = Line(dot1, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
-    #     objects_buffer.append(i_circ1)
-    #     objects_buffer.append(i_circ2)
-    #     objects_buffer.append(i_circ3)
-    #     objects_buffer.append(i_circ4)
-    #     objects_buffer.append(i_line1)
-    #     objects_buffer.append(i_line2)
-    #     objects_buffer.append(i_line3)
+    for _ in range(1):
+        dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+        dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+        dot3 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+        dot4 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
+        i_circ1 = MovableCircle(i_dot=dot1, i_radius=15, i_color=COLOR_WHITE)
+        i_circ2 = MovableCircle(i_dot=dot2, i_radius=15, i_color=COLOR_WHITE)
+        i_circ3 = MovableCircle(i_dot=dot3, i_radius=15, i_color=COLOR_WHITE)
+        i_line1 = Line(dot1, dot2, COLOR_RED, False, COLOR_RED, COLOR_RED)
+        i_line2 = Line(dot2, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
+        i_line3 = Line(dot1, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
+        objects_buffer.append(i_circ1)
+        objects_buffer.append(i_circ2)
+        objects_buffer.append(i_circ3)
+        objects_buffer.append(i_line1)
+        objects_buffer.append(i_line2)
+        objects_buffer.append(i_line3)
 
-    distance = 40
-
-    for i in range(1, 38): # 38
-        for y in range(1, 19): # 19
-            temp_dot = Dot(distance * i, distance * y)
-            objects_buffer.append(
-                GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
+    # distance = 40
+    #
+    # for i in range(1, 38): # 38
+    #     for y in range(1, 19): # 19
+    #         temp_dot = Dot(distance * i, distance * y)
+    #         objects_buffer.append(
+    #             GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
 
     # 8.2 Test objects transferred to objects engine
     for pos in objects_buffer:
