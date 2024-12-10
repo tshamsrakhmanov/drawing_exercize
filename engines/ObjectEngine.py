@@ -57,13 +57,21 @@ class ObjectsEngine:
             obj: GradientCircle
             distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
 
-            if distance >= obj.radius * 50:
+            max_dist = 40
+            min_dist = 1
+            delta_dist = max_dist - min_dist
+
+            if distance >= obj.radius * max_dist:
                 obj.actual_size = obj.radius * 2
-            elif obj.radius * 4 <= distance < obj.radius * 50:
+                obj.color = COLOR_GREEN
+            elif obj.radius * min_dist <= distance < obj.radius * max_dist:
+                coeff_1 = (distance - min_dist * obj.radius) / (delta_dist * obj.radius)
                 obj.actual_size = int(
-                    (obj.radius / 2) + (1.5 * obj.radius) * (distance - 8 * obj.radius) / (46 * obj.radius))
+                    (obj.radius / 2) + (1.5 * obj.radius) * coeff_1)
+                obj.color = (int(255 - 255 * coeff_1), int(0 + 255 * coeff_1), 0)
             else:
                 obj.actual_size = int(obj.radius / 4)
+                obj.color = COLOR_RED
 
         # MOVABLE CIRCLE FACILITATION
         for obj in filter(lambda x: isinstance(x, MovableCircle), self.set_of_objects):
