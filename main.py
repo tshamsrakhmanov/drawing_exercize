@@ -127,7 +127,7 @@ def demo_triangle(input_buffer):
 def demo_gradient(input_buffer):
     distance = 40
 
-    for i in range(1, 38):  # 38
+    for i in range(5, 38):  # 38
         for y in range(1, 19):  # 19
             temp_dot = Dot(distance * i, distance * y)
             input_buffer.append(
@@ -138,6 +138,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Some parser')
     parser.add_argument('--type', type=str, help='type of demo to show')
     args = parser.parse_args()
-    # print(args.indir)
 
     main(args.type)
