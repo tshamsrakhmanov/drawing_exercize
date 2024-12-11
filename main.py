@@ -1,3 +1,4 @@
+import math
 import random
 
 import settings.resolution
@@ -52,7 +53,7 @@ def main(demo_type):
     if demo_type is None:
         raise Exception('No demo requested')
     elif demo_type == 'triangle':
-        demo_triangle(objects_buffer)
+        demo_triangle(objects_buffer, (coef * WIDTH, coef * HEIGHT))
     elif demo_type == 'gradient':
         demo_gradient(objects_buffer)
     elif demo_type == 'sandbox':
@@ -86,7 +87,7 @@ def main(demo_type):
 
         screen.fill(COLOR_BLACK)
 
-        oe.update_set_of_objects(mouse_pos, mouse_up, mouse_down, dt)
+        oe.update_set_of_objects((mouse_pos[0] * coef, mouse_pos[1] * coef), mouse_up, mouse_down, dt)
 
         de.draw_window(pixel_array, oe.get_set_of_objects())
 
@@ -104,20 +105,19 @@ def main(demo_type):
                 fps = round(len(dt_list) / sum(dt_list) * 1000)
                 pygame.display.set_caption("FPS: " + str(fps))
         count += 1
-        # print(dt_list)
 
         mouse_up = False
         mouse_down = False
 
 
-def demo_triangle(input_buffer):
+def demo_triangle(input_buffer, game_field):
     for _ in range(1):
-        dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-        dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-        dot3 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-        i_circ1 = PinBoardCircle(i_dot=dot1, i_radius=15, i_color=COLOR_WHITE)
-        i_circ2 = PinBoardCircle(i_dot=dot2, i_radius=15, i_color=COLOR_WHITE)
-        i_circ3 = PinBoardCircle(i_dot=dot3, i_radius=15, i_color=COLOR_WHITE)
+        dot1 = Dot(game_field[0] / 2, game_field[1] / 4)
+        dot2 = Dot(math.floor(game_field[0] * 3 / 4), math.floor(game_field[1] * 3 / 4))
+        dot3 = Dot(math.floor(game_field[0] * 1 / 4), math.floor(game_field[1] * 3 / 4))
+        i_circ1 = PinBoardCircle(i_dot=dot1, i_radius=150, i_color=COLOR_WHITE)
+        i_circ2 = PinBoardCircle(i_dot=dot2, i_radius=150, i_color=COLOR_WHITE)
+        i_circ3 = PinBoardCircle(i_dot=dot3, i_radius=150, i_color=COLOR_WHITE)
         i_line1 = Line(dot1, dot2, COLOR_RED, False, COLOR_RED, COLOR_RED)
         i_line2 = Line(dot2, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
         i_line3 = Line(dot1, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
