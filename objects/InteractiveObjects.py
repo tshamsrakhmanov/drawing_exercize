@@ -31,11 +31,12 @@ class GradientCircle(Circle, InteractiveObject):
 
 class Vector(InteractiveObject):
 
-    def __init__(self, degree: int, dot_input: Dot):
+    def __init__(self, degree: float, dot_input: Dot, energy_input: float = 100.0):
         self.degree = degree
         self.dot = dot_input
+        self.energy = energy_input
 
-    # def __repr__(self):
+        # def __repr__(self):
     #     return f'{self.dot} {self.normal_x} {self.normal_y}'
 
 
@@ -44,3 +45,4 @@ class MovableCircle(Circle, InteractiveObject):
     def __init__(self, vector: Vector, **kwargs):
         Circle.__init__(self, **kwargs)
         self.vector = vector
+        self.sector = None

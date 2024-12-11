@@ -6,7 +6,8 @@ import math
 
 
 class DrawingEngine:
-    def __init__(self):
+    def __init__(self, drawing_coef: int):
+        self.drawing_coef = drawing_coef
         pass
 
     def draw_window(self, pixel_array_input: pygame.PixelArray, objects_set: set):
@@ -25,12 +26,22 @@ class DrawingEngine:
                         self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
                                                     obj.radius, pixel_array_input, obj.color)
             elif isinstance(obj, Vector):
-                self.draw_line(obj.dot, Dot(int(obj.dot.x + 50 * math.cos(math.radians(obj.degree))), int(
-                    obj.dot.y + 50 * math.sin(math.radians(obj.degree)))),
-                               pixel_array_input, COLOR_TEAL, False)
+                obj: Vector
+                self.draw_line(obj.dot, Dot(int(obj.dot.x + (obj.energy / 2) * math.cos(math.radians(obj.degree))), int(
+                    obj.dot.y + (obj.energy / 2) * math.sin(math.radians(obj.degree)))),
+                               pixel_array_input, (255 - 255 * (obj.energy / 100), (255 * (obj.energy / 100)), 0),
+                               False)
             elif isinstance(obj, MovableCircle):
+                # base implementation
                 self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
                                             obj.radius, pixel_array_input, COLOR_TEAL)
+
+                # if obj.sector == 1:
+                #     self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                #                                 obj.radius, pixel_array_input, COLOR_GREEN)
+                # else:
+                #     self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                #                                 obj.radius, pixel_array_input, COLOR_RED)
             elif isinstance(obj, GradientCircle):
                 self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
                                             obj.actual_size, pixel_array_input, obj.color)
@@ -42,31 +53,32 @@ class DrawingEngine:
                     obj.dot_start, obj.dot_end, pixel_array_input, obj.color, obj.is_pointed, obj.color_point_start,
                     obj.color_point_end)
 
-    # @staticmethod
+
+    """
+    Abandon this algo as a Ravenholm, please
     def draw_circle(self, point: Dot, radius: int, pixel_array: pygame.pixelarray, input_color: RGBColor = COLOR_WHITE):
-        """
         Add circle (filled) to the screen
         :param point: Center point of circle
         :param radius: Radius of circle in pixels
         :param pixel_array: pixel_array to draw a circle
         :param input_color: Color for drawing
         :return: None
-        """
         for dx in range(radius):
             for dy in range(radius):
                 if dx ** 2 + dy ** 2 <= radius ** 2:
 
                     if self.is_in_array(dx + point.x, dy + point.y):
-                        pixel_array[dx + point.x, dy + point.y] = input_color
+                        pixel_array[math.floor((dx + point.x) / self.drawing_coef), math.floor((dy + point.y) / self.drawing_coef)] = input_color
                     if self.is_in_array(dx + point.x, -dy + point.y):
-                        pixel_array[dx + point.x, -dy + point.y] = input_color
+                        pixel_array[math.floor((dx + point.x) / self.drawing_coef), math.floor((-dy + point.y) / self.drawing_coef)] = input_color
                     if self.is_in_array(-dx + point.x, dy + point.y):
-                        pixel_array[-dx + point.x, dy + point.y] = input_color
+                        pixel_array[math.floor((-dx + point.x) / self.drawing_coef), math.floor((dy + point.y) / self.drawing_coef)] = input_color
                     if self.is_in_array(-dx + point.x, -dy + point.y):
-                        pixel_array[-dx + point.x, -dy + point.y] = input_color
+                        pixel_array[math.floor((-dx + point.x) / self.drawing_coef), math.floor((-dy + point.y) / self.drawing_coef)] = input_color
+    
+    """
 
-    @staticmethod
-    def draw_point(input_point: Dot, pixel_array: pygame.PixelArray,
+    def draw_point(self, input_point: Dot, pixel_array: pygame.PixelArray,
                    input_color: RGBColor = COLOR_WHITE):
         """
         Add point drawing to the screen
@@ -76,14 +88,14 @@ class DrawingEngine:
         :return: None
         """
 
-        pixel_array[input_point.x + 1, input_point.y] = input_color
-        pixel_array[input_point.x - 1, input_point.y] = input_color
-        pixel_array[input_point.x, input_point.y] = input_color
-        pixel_array[input_point.x, input_point.y - 1] = input_color
-        pixel_array[input_point.x, input_point.y + 1] = input_color
+        pixel_array[math.floor((input_point.x + 1) / self.drawing_coef), math.floor(input_point.y / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.x - 1) / self.drawing_coef), math.floor(input_point.y / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.x / self.drawing_coef), math.floor(input_point.y / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.x / self.drawing_coef), math.floor((input_point.y - 1) / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.x / self.drawing_coef), math.floor((input_point.y + 1) / self.drawing_coef)] = input_color
 
-    @staticmethod
-    def draw_circle_centerline(point_center: Dot, radius: int, pixel_array: pygame.PixelArray,
+    # @staticmethod
+    def draw_circle_centerline(self, point_center: Dot, radius: int, pixel_array: pygame.PixelArray,
                                color: RGBColor):
         x = radius
         y = 0
@@ -91,42 +103,42 @@ class DrawingEngine:
         while x >= y:
             try:
                 if 0 < point_center.x + x < settings.resolution.width and 0 < point_center.y + y < settings.resolution.height:
-                    pixel_array[point_center.x + x, point_center.y + y] = color
+                    pixel_array[math.floor((point_center.x + x) / self.drawing_coef), math.floor((point_center.y + y) / self.drawing_coef)] = color
             except Exception:
                 pass
             try:
                 if 0 < point_center.x + y < settings.resolution.width and 0 < point_center.y + x < settings.resolution.height:
-                    pixel_array[point_center.x + y, point_center.y + x] = color
+                    pixel_array[math.floor((point_center.x + y) / self.drawing_coef), math.floor((point_center.y + x) / self.drawing_coef)] = color
             except Exception:
                 pass
             try:
                 if 0 < point_center.x - y < settings.resolution.width and 0 < point_center.y + x < settings.resolution.height:
-                    pixel_array[point_center.x - y, point_center.y + x] = color
+                    pixel_array[math.floor((point_center.x - y) / self.drawing_coef), math.floor((point_center.y + x) / self.drawing_coef)] = color
             except Exception:
                 pass
             try:
                 if 0 < point_center.x - x < settings.resolution.width and 0 < point_center.y + y < settings.resolution.height:
-                    pixel_array[point_center.x - x, point_center.y + y] = color
+                    pixel_array[math.floor((point_center.x - x) / self.drawing_coef), math.floor((point_center.y + y) / self.drawing_coef)] = color
             except Exception:
                 pass
             try:
                 if 0 < point_center.x - x < settings.resolution.width and 0 < point_center.y - y < settings.resolution.height:
-                    pixel_array[point_center.x - x, point_center.y - y] = color
+                    pixel_array[math.floor((point_center.x - x) / self.drawing_coef), math.floor((point_center.y - y) / self.drawing_coef)] = color
             except Exception:
                 pass
             try:
                 if 0 < point_center.x - y < settings.resolution.width and 0 < point_center.y - x < settings.resolution.height:
-                    pixel_array[point_center.x - y, point_center.y - x] = color
+                    pixel_array[math.floor((point_center.x - y) / self.drawing_coef), math.floor((point_center.y - x) / self.drawing_coef)] = color
             except Exception:
                 pass
             try:
                 if 0 < point_center.x + y < settings.resolution.width and 0 < point_center.y - x < settings.resolution.height:
-                    pixel_array[point_center.x + y, point_center.y - x] = color
+                    pixel_array[math.floor((point_center.x + y) / self.drawing_coef), math.floor((point_center.y - x) / self.drawing_coef)] = color
             except Exception:
                 pass
             try:
                 if 0 < point_center.x + x < settings.resolution.width and 0 < point_center.y - y < settings.resolution.height:
-                    pixel_array[point_center.x + x, point_center.y - y] = color
+                    pixel_array[math.floor((point_center.x + x) / self.drawing_coef), math.floor((point_center.y - y) / self.drawing_coef)] = color
             except Exception:
                 pass
 
@@ -168,7 +180,7 @@ class DrawingEngine:
         while True:
             try:
                 if 0 < x0 < settings.resolution.width and 0 < y0 < settings.resolution.height:
-                    pixel_array[x0 - 1, y0 - 1] = color_of_line
+                    pixel_array[math.floor((x0 - 1) / self.drawing_coef), math.floor((y0 - 1) / self.drawing_coef)] = color_of_line
             except Exception:
                 pass
 

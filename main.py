@@ -18,7 +18,9 @@ def main(demo_type):
 
     # 3. window setup
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    # pygame.mouse.set_visible(False)
+
+    # 3.1 Remove cursor on window frame
+    pygame.mouse.set_visible(True)
 
     # 4. window name and icon setup
     program_icon = pygame.image.load('extras/icon.png')
@@ -26,6 +28,9 @@ def main(demo_type):
 
     # 5. condition of running setup
     clock = pygame.time.Clock()
+
+    # COEFFICIENT FOR DRAWING
+    coef = 4
 
     # 6. FPS init
     clock.tick()
@@ -37,10 +42,10 @@ def main(demo_type):
     running = 1
 
     # 8. Objects engine init
-    oe = ObjectsEngine()
+    oe = ObjectsEngine(WIDTH, HEIGHT, coef)
 
     # 9. Drawing engine init
-    de = DrawingEngine()
+    de = DrawingEngine(coef)
 
     # 8.1 Static objects declaration - TEST FUNCTION
     objects_buffer = []
@@ -137,12 +142,19 @@ def demo_gradient(input_buffer):
 
 def demo_sandbox(input_buffer):
     # 360 dots
-    for i in range(5):
-        temp_dot = Dot(int(WIDTH / 2), int(HEIGHT / 2) )
-        vector_1 = Vector(i * 5, temp_dot)
+    for i in range(72):
+        temp_dot = Dot(0, 0)
+        vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(10, 250)))
         movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
         input_buffer.append(movable_circle)
         # input_buffer.append(vector_1)
+
+    # single dot
+    # temp_dot = Dot(int(WIDTH / 2), int(HEIGHT / 2))
+    # vector_1 = Vector(140, temp_dot, energy_input=float(random.randint(50, 250)))
+    # movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+    # input_buffer.append(movable_circle)
+    # input_buffer.append(vector_1)
 
     # left quarter check
     # for i in range(4):
@@ -151,12 +163,12 @@ def demo_sandbox(input_buffer):
     #     movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
     #     input_buffer.append(movable_circle)
     #     input_buffer.append(vector_1)
-    for i in range(1):
-        temp_dot = Dot(100, 100)
-        vector_1 = Vector(45, temp_dot)
-        movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
-        input_buffer.append(movable_circle)
-        # input_buffer.append(vector_1)
+    # for i in range(1):
+    #     temp_dot = Dot(100, 100)
+    #     vector_1 = Vector(45, temp_dot)
+    #     movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+    #     input_buffer.append(movable_circle)
+    #     input_buffer.append(vector_1)
 
 
 if __name__ == '__main__':

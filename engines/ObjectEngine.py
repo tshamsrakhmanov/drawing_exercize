@@ -1,7 +1,7 @@
 import math
 import random
 
-import settings.resolution
+# import settings.resolution
 from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector
 from objects.GeometryObjects import Geometry
 from settings.colors import *
@@ -11,7 +11,7 @@ class ObjectsEngine:
     # to resolve out-of bounds movement
     BOUNDARY = 5
 
-    def __init__(self):
+    def __init__(self, WIDTH: int, HEIGHT: int, coef: int):
         """
         Init of objects engine
          - create empty set of objects
@@ -19,6 +19,11 @@ class ObjectsEngine:
         """
         self.set_of_objects = set()
         self.ticker_cache = None
+        self.limit_x = WIDTH * coef
+        self.limit_y = HEIGHT * coef
+
+    def get_field(self):
+        return self.limit_x, self.limit_y
 
     def update_set_of_objects(self, mouse_pos: tuple, mouse_up: bool, mouse_down: bool, dt: int):
         """
@@ -105,32 +110,56 @@ class ObjectsEngine:
             elif isinstance(obj, MovableCircle):
                 obj: MovableCircle
 
+                # apply sectoring
+                if obj.dot_start.x < int(self.limit_x / 2):
+                    obj.sector = 1
+                else:
+                    obj.sector = 2
+
+                energy_loss = 0.85
+
                 if obj.dot_start.y < ObjectsEngine.BOUNDARY:
+                    obj.vector.energy *= energy_loss
                     obj.dot_start.y = ObjectsEngine.BOUNDARY
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
 
-                elif obj.dot_start.y > settings.resolution.height - ObjectsEngine.BOUNDARY:
-                    obj.dot_start.y = settings.resolution.height - ObjectsEngine.BOUNDARY
+                elif obj.dot_start.y > self.limit_y - ObjectsEngine.BOUNDARY:
+                    obj.vector.energy *= energy_loss
+                    obj.dot_start.y = self.limit_y - ObjectsEngine.BOUNDARY
                     # try:
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
                     # except UnboundLocalError as e:
                     #     print(obj.vector.degree)
 
                 elif obj.dot_start.x < ObjectsEngine.BOUNDARY:
+                    obj.vector.energy *= energy_loss
                     obj.dot_start.x = ObjectsEngine.BOUNDARY + 1
                     # try:
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
                     # except UnboundLocalError as e:
                     #     print(obj.vector.degree)
-                elif obj.dot_start.x > settings.resolution.width - ObjectsEngine.BOUNDARY:
-                    obj.dot_start.x = settings.resolution.width - ObjectsEngine.BOUNDARY - 1
+                elif obj.dot_start.x > self.limit_x - ObjectsEngine.BOUNDARY:
+                    obj.vector.energy *= energy_loss
+                    obj.dot_start.x = self.limit_x - ObjectsEngine.BOUNDARY - 1
                     # try:
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
                     # except UnboundLocalError as e:
                     #     print(obj.vector.degree)
 
-                obj.vector.dot.x += math.floor((dt % 360) * math.cos(math.radians(obj.vector.degree)))
-                obj.vector.dot.y += math.floor((dt % 360) * math.sin(math.radians(obj.vector.degree)))
+                if obj.vector.energy < 1:
+                    obj.vector.energy = 0
+
+                obj.vector.energy -= 0.05
+
+                obj.vector.energy = round(obj.vector.energy, 3)
+
+                # print(obj.vector.energy, obj.vector.degree)
+
+                if obj.vector.energy > 0:
+                    obj.vector.dot.x += math.floor(
+                        (dt % 180 * (obj.vector.energy / 100)) * math.cos(math.radians(obj.vector.degree)))
+                    obj.vector.dot.y += math.floor(
+                        (dt % 180 * (obj.vector.energy / 100)) * math.sin(math.radians(obj.vector.degree)))
 
     def get_set_of_objects(self):
         """
@@ -177,8 +206,8 @@ class ObjectsEngine:
             answer = 540 - a
         elif 270 < a < 360:
             answer = 540 - a
-
-        return answer + random.randint(-5, 5)
+        # return answer + random.randint(0, 15)
+        return answer + 1
 
     @staticmethod
     def mirror_angle_by_x_axis(a):
@@ -214,4 +243,5 @@ class ObjectsEngine:
         elif 180 < a < 270:
             answer = 360 - a
 
-        return answer + random.randint(-5, 5)
+        # return answer + random.randint(0, 15)
+        return answer + 1
