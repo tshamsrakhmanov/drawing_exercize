@@ -3,13 +3,13 @@ import random
 
 # import settings.resolution
 from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector
-from objects.GeometryObjects import Geometry
+from objects.GeometryObjects import Geometry, Dot
 from settings.colors import *
 
 
 class ObjectsEngine:
     # to resolve out-of bounds movement
-    BOUNDARY = 5
+    BOUNDARY = 500
 
     def __init__(self, WIDTH: int, HEIGHT: int, coef: int):
         """
@@ -117,49 +117,36 @@ class ObjectsEngine:
                     obj.sector = 2
 
                 energy_loss = 0.85
+                # energy_loss = 1
 
                 if obj.dot_start.y < ObjectsEngine.BOUNDARY:
                     obj.vector.energy *= energy_loss
                     obj.dot_start.y = ObjectsEngine.BOUNDARY
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
-
                 elif obj.dot_start.y > self.limit_y - ObjectsEngine.BOUNDARY:
                     obj.vector.energy *= energy_loss
                     obj.dot_start.y = self.limit_y - ObjectsEngine.BOUNDARY
-                    # try:
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
-                    # except UnboundLocalError as e:
-                    #     print(obj.vector.degree)
-
                 elif obj.dot_start.x < ObjectsEngine.BOUNDARY:
                     obj.vector.energy *= energy_loss
                     obj.dot_start.x = ObjectsEngine.BOUNDARY + 1
-                    # try:
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
-                    # except UnboundLocalError as e:
-                    #     print(obj.vector.degree)
                 elif obj.dot_start.x > self.limit_x - ObjectsEngine.BOUNDARY:
                     obj.vector.energy *= energy_loss
                     obj.dot_start.x = self.limit_x - ObjectsEngine.BOUNDARY - 1
-                    # try:
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
-                    # except UnboundLocalError as e:
-                    #     print(obj.vector.degree)
 
-                if obj.vector.energy < 1:
-                    obj.vector.energy = 0
-
-                obj.vector.energy -= 0.05
+                # obj.vector.energy -= 0.075
+                obj.vector.energy -= 1
 
                 obj.vector.energy = round(obj.vector.energy, 3)
 
-                # print(obj.vector.energy, obj.vector.degree)
-
                 if obj.vector.energy > 0:
                     obj.vector.dot.x += math.floor(
-                        (dt % 180 * (obj.vector.energy / 100)) * math.cos(math.radians(obj.vector.degree)))
+                        (dt *  (obj.vector.energy / 100)) * math.cos(math.radians(obj.vector.degree)))
                     obj.vector.dot.y += math.floor(
-                        (dt % 180 * (obj.vector.energy / 100)) * math.sin(math.radians(obj.vector.degree)))
+                        (dt * (obj.vector.energy / 100)) * math.sin(math.radians(obj.vector.degree)))
+
 
     def get_set_of_objects(self):
         """

@@ -9,7 +9,6 @@ import argparse
 WIDTH = settings.resolution.width
 HEIGHT = settings.resolution.height
 
-
 def main(demo_type):
     # 1. resolution setup
 
@@ -30,7 +29,7 @@ def main(demo_type):
     clock = pygame.time.Clock()
 
     # COEFFICIENT FOR DRAWING
-    coef = 4
+    coef = 15
 
     # 6. FPS init
     clock.tick()
@@ -143,16 +142,16 @@ def demo_gradient(input_buffer):
 def demo_sandbox(input_buffer):
     # 360 dots
     for i in range(72):
-        temp_dot = Dot(500, 500)
-        vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(10, 250)))
-        movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+        temp_dot = Dot(8000, 8000)
+        vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(10, 1000)))
+        movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=80, i_color=COLOR_WHITE)
         input_buffer.append(movable_circle)
         # input_buffer.append(vector_1)
 
     # single dot
     # temp_dot = Dot(int(WIDTH / 2), int(HEIGHT / 2))
-    # vector_1 = Vector(140, temp_dot, energy_input=float(random.randint(50, 250)))
-    # movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+    # vector_1 = Vector(5.5, temp_dot)
+    # movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=300, i_color=COLOR_WHITE)
     # input_buffer.append(movable_circle)
     # input_buffer.append(vector_1)
 

@@ -27,8 +27,8 @@ class DrawingEngine:
                                                     obj.radius, pixel_array_input, obj.color)
             elif isinstance(obj, Vector):
                 obj: Vector
-                self.draw_line(obj.dot, Dot(int(obj.dot.x + (obj.energy / 2) * math.cos(math.radians(obj.degree))), int(
-                    obj.dot.y + (obj.energy / 2) * math.sin(math.radians(obj.degree)))),
+                self.draw_line(obj.dot, Dot(int(obj.dot.x + (obj.energy * 2) * math.cos(math.radians(obj.degree))), int(
+                    obj.dot.y + (obj.energy * 2) * math.sin(math.radians(obj.degree)))),
                                pixel_array_input, (255 - 255 * (obj.energy / 100), (255 * (obj.energy / 100)), 0),
                                False)
             elif isinstance(obj, MovableCircle):
@@ -94,7 +94,6 @@ class DrawingEngine:
         pixel_array[math.floor(input_point.x / self.drawing_coef), math.floor((input_point.y - 1) / self.drawing_coef)] = input_color
         pixel_array[math.floor(input_point.x / self.drawing_coef), math.floor((input_point.y + 1) / self.drawing_coef)] = input_color
 
-    # @staticmethod
     def draw_circle_centerline(self, point_center: Dot, radius: int, pixel_array: pygame.PixelArray,
                                color: RGBColor):
         x = radius
@@ -150,8 +149,7 @@ class DrawingEngine:
 
         while True:
             try:
-                if 0 < x0 < settings.resolution.width and 0 < y0 < settings.resolution.height:
-                    pixel_array[math.floor((x0 - 1) / self.drawing_coef), math.floor((y0 - 1) / self.drawing_coef)] = color_of_line
+                pixel_array[math.floor((x0 - 1) / self.drawing_coef), math.floor((y0 - 1) / self.drawing_coef)] = color_of_line
             except Exception:
                 pass
 
