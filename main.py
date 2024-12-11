@@ -143,7 +143,7 @@ def demo_gradient(input_buffer):
 def demo_sandbox(input_buffer):
     # 360 dots
     for i in range(72):
-        temp_dot = Dot(0, 0)
+        temp_dot = Dot(500, 500)
         vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(10, 250)))
         movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
         input_buffer.append(movable_circle)

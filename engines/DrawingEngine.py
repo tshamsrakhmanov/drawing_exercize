@@ -102,43 +102,14 @@ class DrawingEngine:
         err = 0
         while x >= y:
             try:
-                if 0 < point_center.x + x < settings.resolution.width and 0 < point_center.y + y < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x + x) / self.drawing_coef), math.floor((point_center.y + y) / self.drawing_coef)] = color
-            except Exception:
-                pass
-            try:
-                if 0 < point_center.x + y < settings.resolution.width and 0 < point_center.y + x < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x + y) / self.drawing_coef), math.floor((point_center.y + x) / self.drawing_coef)] = color
-            except Exception:
-                pass
-            try:
-                if 0 < point_center.x - y < settings.resolution.width and 0 < point_center.y + x < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x - y) / self.drawing_coef), math.floor((point_center.y + x) / self.drawing_coef)] = color
-            except Exception:
-                pass
-            try:
-                if 0 < point_center.x - x < settings.resolution.width and 0 < point_center.y + y < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x - x) / self.drawing_coef), math.floor((point_center.y + y) / self.drawing_coef)] = color
-            except Exception:
-                pass
-            try:
-                if 0 < point_center.x - x < settings.resolution.width and 0 < point_center.y - y < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x - x) / self.drawing_coef), math.floor((point_center.y - y) / self.drawing_coef)] = color
-            except Exception:
-                pass
-            try:
-                if 0 < point_center.x - y < settings.resolution.width and 0 < point_center.y - x < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x - y) / self.drawing_coef), math.floor((point_center.y - x) / self.drawing_coef)] = color
-            except Exception:
-                pass
-            try:
-                if 0 < point_center.x + y < settings.resolution.width and 0 < point_center.y - x < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x + y) / self.drawing_coef), math.floor((point_center.y - x) / self.drawing_coef)] = color
-            except Exception:
-                pass
-            try:
-                if 0 < point_center.x + x < settings.resolution.width and 0 < point_center.y - y < settings.resolution.height:
-                    pixel_array[math.floor((point_center.x + x) / self.drawing_coef), math.floor((point_center.y - y) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x + x) / self.drawing_coef), math.floor((point_center.y + y) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x + y) / self.drawing_coef), math.floor((point_center.y + x) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x - y) / self.drawing_coef), math.floor((point_center.y + x) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x - x) / self.drawing_coef), math.floor((point_center.y + y) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x - x) / self.drawing_coef), math.floor((point_center.y - y) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x - y) / self.drawing_coef), math.floor((point_center.y - x) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x + y) / self.drawing_coef), math.floor((point_center.y - x) / self.drawing_coef)] = color
+                pixel_array[math.floor((point_center.x + x) / self.drawing_coef), math.floor((point_center.y - y) / self.drawing_coef)] = color
             except Exception:
                 pass
 
