@@ -1,6 +1,8 @@
+import settings.resolution
 from settings import resolution
 import pygame
 from objects.InteractiveObjects import *
+import math
 
 
 class DrawingEngine:
@@ -12,10 +14,9 @@ class DrawingEngine:
         for obj in objects_set:
 
             # based on the object - draw something
-
             if isinstance(obj, Dot):
                 self.draw_point(Dot(obj.x, obj.y), pixel_array_input, obj.color)
-            elif isinstance(obj, MovableCircle):
+            elif isinstance(obj, PinBoardCircle):
                 match obj.active:
                     case True:
                         self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
@@ -23,6 +24,13 @@ class DrawingEngine:
                     case False:
                         self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
                                                     obj.radius, pixel_array_input, obj.color)
+            elif isinstance(obj, Vector):
+                self.draw_line(obj.dot, Dot(int(obj.dot.x + 50 * math.cos(math.radians(obj.degree))), int(
+                    obj.dot.y + 50 * math.sin(math.radians(obj.degree)))),
+                               pixel_array_input, COLOR_TEAL, False)
+            elif isinstance(obj, MovableCircle):
+                self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                                            obj.radius, pixel_array_input, COLOR_TEAL)
             elif isinstance(obj, GradientCircle):
                 self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
                                             obj.actual_size, pixel_array_input, obj.color)
@@ -81,14 +89,46 @@ class DrawingEngine:
         y = 0
         err = 0
         while x >= y:
-            pixel_array[point_center.x + x, point_center.y + y] = color
-            pixel_array[point_center.x + y, point_center.y + x] = color
-            pixel_array[point_center.x - y, point_center.y + x] = color
-            pixel_array[point_center.x - x, point_center.y + y] = color
-            pixel_array[point_center.x - x, point_center.y - y] = color
-            pixel_array[point_center.x - y, point_center.y - x] = color
-            pixel_array[point_center.x + y, point_center.y - x] = color
-            pixel_array[point_center.x + x, point_center.y - y] = color
+            try:
+                if 0 < point_center.x + x < settings.resolution.width and 0 < point_center.y + y < settings.resolution.height:
+                    pixel_array[point_center.x + x, point_center.y + y] = color
+            except Exception:
+                pass
+            try:
+                if 0 < point_center.x + y < settings.resolution.width and 0 < point_center.y + x < settings.resolution.height:
+                    pixel_array[point_center.x + y, point_center.y + x] = color
+            except Exception:
+                pass
+            try:
+                if 0 < point_center.x - y < settings.resolution.width and 0 < point_center.y + x < settings.resolution.height:
+                    pixel_array[point_center.x - y, point_center.y + x] = color
+            except Exception:
+                pass
+            try:
+                if 0 < point_center.x - x < settings.resolution.width and 0 < point_center.y + y < settings.resolution.height:
+                    pixel_array[point_center.x - x, point_center.y + y] = color
+            except Exception:
+                pass
+            try:
+                if 0 < point_center.x - x < settings.resolution.width and 0 < point_center.y - y < settings.resolution.height:
+                    pixel_array[point_center.x - x, point_center.y - y] = color
+            except Exception:
+                pass
+            try:
+                if 0 < point_center.x - y < settings.resolution.width and 0 < point_center.y - x < settings.resolution.height:
+                    pixel_array[point_center.x - y, point_center.y - x] = color
+            except Exception:
+                pass
+            try:
+                if 0 < point_center.x + y < settings.resolution.width and 0 < point_center.y - x < settings.resolution.height:
+                    pixel_array[point_center.x + y, point_center.y - x] = color
+            except Exception:
+                pass
+            try:
+                if 0 < point_center.x + x < settings.resolution.width and 0 < point_center.y - y < settings.resolution.height:
+                    pixel_array[point_center.x + x, point_center.y - y] = color
+            except Exception:
+                pass
 
             y += 1
             err += 1 + 2 * y
@@ -126,8 +166,11 @@ class DrawingEngine:
         error = dx + dy
 
         while True:
-
-            pixel_array[x0 - 1, y0 - 1] = color_of_line
+            try:
+                if 0 < x0 < settings.resolution.width and 0 < y0 < settings.resolution.height:
+                    pixel_array[x0 - 1, y0 - 1] = color_of_line
+            except Exception:
+                pass
 
             if x0 == x1 and y0 == y1:
                 break

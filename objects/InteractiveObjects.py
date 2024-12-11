@@ -5,7 +5,7 @@ class InteractiveObject:
     pass
 
 
-class MovableCircle(Circle, InteractiveObject):
+class PinBoardCircle(Circle, InteractiveObject):
     focus_color = COLOR_ORANGE
     base_color = COLOR_WHITE
 
@@ -29,5 +29,18 @@ class GradientCircle(Circle, InteractiveObject):
         self.actual_size = 0
 
 
-class InteractiveDot(InteractiveObject):
-    pass
+class Vector(InteractiveObject):
+
+    def __init__(self, degree: int, dot_input: Dot):
+        self.degree = degree
+        self.dot = dot_input
+
+    # def __repr__(self):
+    #     return f'{self.dot} {self.normal_x} {self.normal_y}'
+
+
+class MovableCircle(Circle, InteractiveObject):
+
+    def __init__(self, vector: Vector, **kwargs):
+        Circle.__init__(self, **kwargs)
+        self.vector = vector

@@ -1,3 +1,5 @@
+import random
+
 import settings.resolution
 from engines.DrawingEngine import *
 from engines.ObjectEngine import *
@@ -28,6 +30,7 @@ def main(demo_type):
     # 6. FPS init
     clock.tick()
     count = 0
+    fps = 0
     dt_list = []
 
     # 7. Condition of run init
@@ -39,10 +42,6 @@ def main(demo_type):
     # 9. Drawing engine init
     de = DrawingEngine()
 
-    # #########################
-    # STATIC OBJECT ADD HERE
-    # #########################
-
     # 8.1 Static objects declaration - TEST FUNCTION
     objects_buffer = []
 
@@ -52,18 +51,18 @@ def main(demo_type):
         demo_triangle(objects_buffer)
     elif demo_type == 'gradient':
         demo_gradient(objects_buffer)
+    elif demo_type == 'sandbox':
+        demo_sandbox(objects_buffer)
 
     # 8.2 Test objects transferred to objects engine
     for pos in objects_buffer:
         oe.add_object(pos)
 
-    # ###########################
-    # END
-    # ###########################
-
     # 8.3 interuptors declaration
     mouse_up = False
     mouse_down = False
+
+    dt = 0
 
     # 9. Main loop
     while running:
@@ -83,7 +82,7 @@ def main(demo_type):
 
         screen.fill(COLOR_BLACK)
 
-        oe.update_set_of_objects(mouse_pos, mouse_up, mouse_down)
+        oe.update_set_of_objects(mouse_pos, mouse_up, mouse_down, dt)
 
         de.draw_window(pixel_array, oe.get_set_of_objects())
 
@@ -91,14 +90,17 @@ def main(demo_type):
 
         pygame.display.flip()
 
-        dt_list += [clock.tick()]
+        dt = clock.tick(60)
+        dt_list += [dt]
         if len(dt_list) > 100:
             del dt_list[0]
         if count % 100 == 0:
             dt_sum = sum(dt_list)
             if dt_sum > 0:
-                pygame.display.set_caption("FPS: " + str(round(len(dt_list) / sum(dt_list) * 1000)))
+                fps = round(len(dt_list) / sum(dt_list) * 1000)
+                pygame.display.set_caption("FPS: " + str(fps))
         count += 1
+        # print(dt_list)
 
         mouse_up = False
         mouse_down = False
@@ -109,10 +111,9 @@ def demo_triangle(input_buffer):
         dot1 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
         dot2 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
         dot3 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-        dot4 = Dot(random.randint(100, WIDTH - 100), random.randint(100, HEIGHT - 100))
-        i_circ1 = MovableCircle(i_dot=dot1, i_radius=15, i_color=COLOR_WHITE)
-        i_circ2 = MovableCircle(i_dot=dot2, i_radius=15, i_color=COLOR_WHITE)
-        i_circ3 = MovableCircle(i_dot=dot3, i_radius=15, i_color=COLOR_WHITE)
+        i_circ1 = PinBoardCircle(i_dot=dot1, i_radius=15, i_color=COLOR_WHITE)
+        i_circ2 = PinBoardCircle(i_dot=dot2, i_radius=15, i_color=COLOR_WHITE)
+        i_circ3 = PinBoardCircle(i_dot=dot3, i_radius=15, i_color=COLOR_WHITE)
         i_line1 = Line(dot1, dot2, COLOR_RED, False, COLOR_RED, COLOR_RED)
         i_line2 = Line(dot2, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
         i_line3 = Line(dot1, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
@@ -132,6 +133,30 @@ def demo_gradient(input_buffer):
             temp_dot = Dot(distance * i, distance * y)
             input_buffer.append(
                 GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
+
+
+def demo_sandbox(input_buffer):
+    # 360 dots
+    for i in range(5):
+        temp_dot = Dot(int(WIDTH / 2), int(HEIGHT / 2) )
+        vector_1 = Vector(i * 5, temp_dot)
+        movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+        input_buffer.append(movable_circle)
+        # input_buffer.append(vector_1)
+
+    # left quarter check
+    # for i in range(4):
+    #     temp_dot = Dot(int(WIDTH / 2) + random.randint(-50,50), int(HEIGHT / 2) + random.randint(-50,50))
+    #     vector_1 = Vector(170 + i * 5, temp_dot)
+    #     movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+    #     input_buffer.append(movable_circle)
+    #     input_buffer.append(vector_1)
+    for i in range(1):
+        temp_dot = Dot(100, 100)
+        vector_1 = Vector(45, temp_dot)
+        movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+        input_buffer.append(movable_circle)
+        # input_buffer.append(vector_1)
 
 
 if __name__ == '__main__':
