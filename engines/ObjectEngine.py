@@ -9,9 +9,8 @@ from settings.colors import *
 
 class ObjectsEngine:
     # to resolve out-of bounds movement
-    BOUNDARY = 500
 
-    def __init__(self, WIDTH: int, HEIGHT: int, coef: int):
+    def __init__(self, WIDTH: int, HEIGHT: int, coef: int, segments: int):
         """
         Init of objects engine
          - create empty set of objects
@@ -19,11 +18,26 @@ class ObjectsEngine:
         """
         self.set_of_objects = set()
         self.ticker_cache = None
-        self.limit_x = WIDTH * coef
-        self.limit_y = HEIGHT * coef
+        self.field_coordinate_x = WIDTH * coef
+        self.field_coordinate_y = HEIGHT * coef
+        self.coef = coef
+        self.energy_loss = 0.85
+        self.boundary_for_moving_objects = 500
+        self.sectoring_factor = segments
+        self.segment_dimension_x = int(self.field_coordinate_x / self.sectoring_factor)
+        self.segment_dimension_y = int(self.field_coordinate_x / self.sectoring_factor)
 
     def get_field(self):
-        return self.limit_x, self.limit_y
+        return self.field_coordinate_x, self.field_coordinate_y
+
+    def get_objects_by_adjacent_sector(self, sector_id_x_input: int, sector_id_y_input, obj_self):
+
+        answer = set(filter(lambda x: isinstance(x, MovableCircle) and
+                                      x.sector_x - 1 <= sector_id_x_input <= x.sector_x + 1 and
+                                      x.sector_y - 1 <= sector_id_y_input <= x.sector_y + 1 and
+                                      x != obj_self, self.set_of_objects))
+
+        return answer
 
     def update_set_of_objects(self, mouse_pos: tuple, mouse_up: bool, mouse_down: bool, dt: int):
         """
@@ -33,6 +47,22 @@ class ObjectsEngine:
         :param mouse_down: detection of mouse press button
         :return: None
         """
+
+        if mouse_up:
+            self.set_of_objects.clear()
+            for i in range(72):
+                temp_dot = Dot((mouse_pos[0] ) + random.randint(-1000,1000),(mouse_pos[1] ) + random.randint(-1000,1000))
+                vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
+                movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5,25), i_color=COLOR_RANDOM())
+                self.add_object(movable_circle)
+
+
+
+        # Separate algorythm to apply sector id to objects:
+        for obj in self.set_of_objects:
+            if isinstance(obj, MovableCircle):
+                obj.sector_x = obj.vector.dot.x // self.segment_dimension_x
+                obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
 
         for obj in self.set_of_objects:
 
@@ -111,41 +141,52 @@ class ObjectsEngine:
                 obj: MovableCircle
 
                 # apply sectoring
-                if obj.dot_start.x < int(self.limit_x / 2):
-                    obj.sector = 1
-                else:
-                    obj.sector = 2
+                obj.sector_x = obj.vector.dot.x // self.segment_dimension_x
+                obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
 
-                energy_loss = 0.85
-                # energy_loss = 1
-
-                if obj.dot_start.y < ObjectsEngine.BOUNDARY:
-                    obj.vector.energy *= energy_loss
-                    obj.dot_start.y = ObjectsEngine.BOUNDARY
+                # CONDITION - WALL HIT
+                if obj.dot_start.y < self.boundary_for_moving_objects:
+                    obj.vector.energy *= self.energy_loss
+                    obj.dot_start.y = self.boundary_for_moving_objects
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
-                elif obj.dot_start.y > self.limit_y - ObjectsEngine.BOUNDARY:
-                    obj.vector.energy *= energy_loss
-                    obj.dot_start.y = self.limit_y - ObjectsEngine.BOUNDARY
+                elif obj.dot_start.y > self.field_coordinate_y - self.boundary_for_moving_objects:
+                    obj.vector.energy *= self.energy_loss
+                    obj.dot_start.y = self.field_coordinate_y - self.boundary_for_moving_objects
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
-                elif obj.dot_start.x < ObjectsEngine.BOUNDARY:
-                    obj.vector.energy *= energy_loss
-                    obj.dot_start.x = ObjectsEngine.BOUNDARY + 1
+                elif obj.dot_start.x < self.boundary_for_moving_objects:
+                    obj.vector.energy *= self.energy_loss
+                    obj.dot_start.x = self.boundary_for_moving_objects + 1
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
-                elif obj.dot_start.x > self.limit_x - ObjectsEngine.BOUNDARY:
-                    obj.vector.energy *= energy_loss
-                    obj.dot_start.x = self.limit_x - ObjectsEngine.BOUNDARY - 1
+                elif obj.dot_start.x > self.field_coordinate_x - self.boundary_for_moving_objects:
+                    obj.vector.energy *= self.energy_loss
+                    obj.dot_start.x = self.field_coordinate_x - self.boundary_for_moving_objects - 1
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
 
-                # obj.vector.energy -= 0.075
-                obj.vector.energy -= 1
+                # CONDITION - ANOTHER BALL HIT
+                # for adjacent_obj in self.get_objects_by_adjacent_sector(obj.sector_x, obj.sector_y, obj):
+                #
+                #     distance = math.sqrt(
+                #         (obj.dot_start.x - adjacent_obj.dot_start.x) ** 2 + (
+                #                 obj.dot_start.y - adjacent_obj.dot_start.y) ** 2)
+                #
+                #     if distance < obj.radius * 35:
+                #         print('HIT')
+                #         obj.vector.degree, adjacent_obj.vector.degree = adjacent_obj.vector.degree, obj.vector.degree
+                #         obj.vector.energy *= self.energy_loss
+                #     else:
+                #         pass
+                        # obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
+                        # adjacent_obj.vector = self.mirror_angle_by_x_axis(adjacent_obj.vector.degree)
 
-                obj.vector.energy = round(obj.vector.energy, 3)
-
+                # GENERAL - LINEAR MOVEMENT BY VECTOR
                 if obj.vector.energy > 0:
                     obj.vector.dot.x += math.floor(
-                        (dt *  (obj.vector.energy / 100)) * math.cos(math.radians(obj.vector.degree)))
+                        (dt * (obj.vector.energy / 100)) * math.cos(math.radians(obj.vector.degree)))
                     obj.vector.dot.y += math.floor(
                         (dt * (obj.vector.energy / 100)) * math.sin(math.radians(obj.vector.degree)))
+                    obj.vector.energy -= 1
+
+                obj.vector.energy = round(obj.vector.energy, 3)
 
 
     def get_set_of_objects(self):

@@ -45,4 +45,5 @@ class MovableCircle(Circle, InteractiveObject):
     def __init__(self, vector: Vector, **kwargs):
         Circle.__init__(self, **kwargs)
         self.vector = vector
-        self.sector = None
+        self.sector_x = None
+        self.sector_y = None

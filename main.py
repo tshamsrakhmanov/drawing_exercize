@@ -7,8 +7,9 @@ from engines.ObjectEngine import *
 import pygame
 import argparse
 
-WIDTH = settings.resolution.width
-HEIGHT = settings.resolution.height
+WIDTH = 900
+HEIGHT = 900
+
 
 def main(demo_type):
     # 1. resolution setup
@@ -32,6 +33,9 @@ def main(demo_type):
     # COEFFICIENT FOR DRAWING
     coef = 15
 
+    # SEGMENTS COUNT
+    sector_quantity = 10
+
     # 6. FPS init
     clock.tick()
     count = 0
@@ -42,7 +46,7 @@ def main(demo_type):
     running = 1
 
     # 8. Objects engine init
-    oe = ObjectsEngine(WIDTH, HEIGHT, coef)
+    oe = ObjectsEngine(WIDTH, HEIGHT, coef, sector_quantity)
 
     # 9. Drawing engine init
     de = DrawingEngine(coef)
@@ -142,18 +146,60 @@ def demo_gradient(input_buffer):
 def demo_sandbox(input_buffer):
     # 360 dots
     for i in range(72):
-        temp_dot = Dot(8000, 8000)
-        vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(10, 1000)))
-        movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=80, i_color=COLOR_WHITE)
+        temp_dot = Dot(8000 + random.randint(-4000,4000), 8000 + random.randint(-4000,4000))
+        vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
+        movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_RANDOM())
         input_buffer.append(movable_circle)
-        # input_buffer.append(vector_1)
+        input_buffer.append(vector_1)
 
-    # single dot
-    # temp_dot = Dot(int(WIDTH / 2), int(HEIGHT / 2))
-    # vector_1 = Vector(5.5, temp_dot)
-    # movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=300, i_color=COLOR_WHITE)
+    # dot's matrix
+    # for i in range(0, 27):
+    #     for y in range(0, 27):
+    #         d = Dot(500 * i, 500 * y)
+    #         v = Vector(random.randint(0,360), d, 0)
+    #         m_s = MovableCircle(v, i_dot=d, i_radius=3, i_color=COLOR_ORANGE)
+    #         input_buffer.append(m_s)
+
+    # double counter-active dots
+    # temp_dot = Dot(500, 500)
+    # vector_1 = Vector(0, temp_dot, 350)
+    # movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
     # input_buffer.append(movable_circle)
-    # input_buffer.append(vector_1)
+    #
+    # temp_dot = Dot(10000, 500)
+    # vector_1 = Vector(180, temp_dot, 350)
+    # movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+    # input_buffer.append(movable_circle)
+
+    # for i in range(0,20):
+    #     for y in range(0,20):
+    #         temp_dot = Dot(2000 + i * 500, 500 + y * 500)
+    #         vector_1 = Vector(10, temp_dot, 0)
+    #         movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE)
+    #         input_buffer.append(movable_circle)
+
+
+
+    # for i in range(0, 27):
+    #     for y in range(0, 27):
+    #         d = Dot(500 * i, 500 * y)
+    #         v = Vector(random.randint(0,360), d, 0)
+    #         m_s = MovableCircle(v, i_dot=d, i_radius=3, i_color=COLOR_WHITE)
+    #         input_buffer.append(m_s)
+
+    # for i in range(0, 27):
+    #     for y in range(0, 27):
+    #         d = Dot(500 * i, 500 * y)
+    #         v = Vector(random.randint(0,360), d, 0)
+    #         m_s = MovableCircle(v, i_dot=d, i_radius=3, i_color=COLOR_ORANGE)
+    #         input_buffer.append(m_s)
+
+    # for i in range(0, 27):
+    #     for y in range(0, 27):
+    #         d = Dot(500 * i, 500 * y)
+    #         v = Vector(random.randint(0,360), d, 0)
+    #         m_s = MovableCircle(v, i_dot=d, i_radius=3, i_color=COLOR_ORANGE)
+    #         input_buffer.append(m_s)
 
     # left quarter check
     # for i in range(4):
