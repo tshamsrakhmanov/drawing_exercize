@@ -26,6 +26,8 @@ class ObjectsEngine:
         self.sectoring_factor = segments
         self.segment_dimension_x = int(self.field_coordinate_x / self.sectoring_factor)
         self.segment_dimension_y = int(self.field_coordinate_x / self.sectoring_factor)
+        self.timer = 0
+        self.time_previous = 0
 
     def get_field(self):
         return self.field_coordinate_x, self.field_coordinate_y
@@ -48,15 +50,33 @@ class ObjectsEngine:
         :return: None
         """
 
+        # Temporary solution to reset sandbox solution
+        # TODO rework all other solution to be reset by a mouse click or any other way
         if mouse_up:
             self.set_of_objects.clear()
             for i in range(72):
-                temp_dot = Dot((mouse_pos[0] ) + random.randint(-1000,1000),(mouse_pos[1] ) + random.randint(-1000,1000))
+                temp_dot = Dot((mouse_pos[0]) + random.randint(-1000, 1000),
+                               (mouse_pos[1]) + random.randint(-1000, 1000))
                 vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
-                movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5,25), i_color=COLOR_RANDOM())
+                movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
+                                               i_color=COLOR_RANDOM())
                 self.add_object(movable_circle)
 
+        self.timer += dt
 
+        if self.timer > self.time_previous + 5000:
+            self.set_of_objects.clear()
+            self.time_previous = 0
+            self.timer = 0
+
+            temp_x = random.randint(500, self.field_coordinate_x)
+            temp_y = random.randint(500, self.field_coordinate_y)
+            for i in range(72):
+                temp_dot = Dot(temp_x + random.randint(-1000, 1000), temp_y + random.randint(-1000, 1000))
+                vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
+                movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
+                                               i_color=COLOR_RANDOM())
+                self.add_object(movable_circle)
 
         # Separate algorythm to apply sector id to objects:
         for obj in self.set_of_objects:
@@ -175,8 +195,8 @@ class ObjectsEngine:
                 #         obj.vector.energy *= self.energy_loss
                 #     else:
                 #         pass
-                        # obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
-                        # adjacent_obj.vector = self.mirror_angle_by_x_axis(adjacent_obj.vector.degree)
+                # obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
+                # adjacent_obj.vector = self.mirror_angle_by_x_axis(adjacent_obj.vector.degree)
 
                 # GENERAL - LINEAR MOVEMENT BY VECTOR
                 if obj.vector.energy > 0:
@@ -187,7 +207,6 @@ class ObjectsEngine:
                     obj.vector.energy -= 1
 
                 obj.vector.energy = round(obj.vector.energy, 3)
-
 
     def get_set_of_objects(self):
         """
