@@ -36,8 +36,6 @@ class Vector(InteractiveObject):
         self.dot = dot_input
         self.energy = energy_input
 
-        # def __repr__(self):
-    #     return f'{self.dot} {self.normal_x} {self.normal_y}'
 
 
 class MovableCircle(Circle, InteractiveObject):
@@ -47,3 +45,13 @@ class MovableCircle(Circle, InteractiveObject):
         self.vector = vector
         self.sector_x = None
         self.sector_y = None
+
+
+class ChainPiece(Circle,InteractiveObject):
+    def __init__(self, next_link: InteractiveObject, link_size:int, **kwargs):
+        Circle.__init__(self, **kwargs)
+        self.next_link = next_link
+        self.link_size = link_size
+
+
+

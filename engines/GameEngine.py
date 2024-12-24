@@ -79,9 +79,9 @@ class GameEngine:
 
             mouse_pos = pygame.mouse.get_pos()
 
-            pixel_array = pygame.PixelArray(screen)
-
             screen.fill(COLOR_BLACK)
+
+            pixel_array = pygame.PixelArray(screen)
 
             oe.update_set_of_objects((mouse_pos[0] * game_field_coef, mouse_pos[1] * game_field_coef), mouse_up, mouse_down, kb_space, self.demo, dt)
 

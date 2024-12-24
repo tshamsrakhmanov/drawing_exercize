@@ -8,6 +8,7 @@ class DrawingEngine:
         self.drawing_coef = drawing_coef
 
     def draw_window(self, pixel_array_input: pygame.PixelArray, objects_set: set):
+
         # iterate through list of objects
         for obj in objects_set:
 
@@ -18,11 +19,11 @@ class DrawingEngine:
                 match obj.active:
                     case True:
                         self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                math.floor(obj.dot_start.y / self.drawing_coef)),
+                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
                                                     obj.radius, pixel_array_input, obj.color)
                     case False:
                         self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                math.floor(obj.dot_start.y / self.drawing_coef)),
+                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
                                                     obj.radius, pixel_array_input, obj.color)
             elif isinstance(obj, Vector):
                 obj: Vector
@@ -40,7 +41,6 @@ class DrawingEngine:
                 self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
                                                 math.floor(obj.dot_start.y / self.drawing_coef)),
                                             obj.radius, pixel_array_input, obj.color)
-
 
                 """
                 Section of code, which coloring movable circles according to the sectors's number which they belong at the moment
@@ -66,11 +66,24 @@ class DrawingEngine:
                                                         math.floor(obj.dot_start.y / self.drawing_coef)),
                                                     obj.radius, pixel_array_input, COLOR_ORANGE)
                 """
-
             elif isinstance(obj, GradientCircle):
                 self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
                                                 math.floor(obj.dot_start.y / self.drawing_coef)),
                                             obj.actual_size, pixel_array_input, obj.color)
+            elif isinstance(obj, ChainPiece):
+                obj: ChainPiece
+
+                # coloring of head - RED
+                if obj.next_link is None:
+                    self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
+                                                    math.floor(obj.dot_start.y / self.drawing_coef)),
+                                                obj.radius, pixel_array_input, COLOR_RED)
+                # coloring of tail - TEAL
+                else:
+                    self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
+                                                    math.floor(obj.dot_start.y / self.drawing_coef)),
+                                                obj.radius, pixel_array_input, COLOR_TEAL)
+
             elif isinstance(obj, Circle):
                 self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
                                                 math.floor(obj.dot_start.y / self.drawing_coef)),
@@ -198,9 +211,3 @@ class DrawingEngine:
         if pointed:
             self.draw_point(point_start, pixel_array, color_start)
             self.draw_point(point_end, pixel_array, color_end)
-
-    # @staticmethod
-    # def is_in_array(x_input, y_input):
-    #     if 0 < x_input - 1 < resolution.width - 1 and 0 < y_input - 1 < resolution.height - 1:
-    #         return True
-    #     return False
