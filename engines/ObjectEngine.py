@@ -1,7 +1,4 @@
 import math
-import random
-
-# import settings.resolution
 from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector, Line, ChainPiece
 from objects.GeometryObjects import Geometry, Dot
 from settings.colors import *
@@ -72,36 +69,38 @@ class ObjectsEngine:
                     movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
                                                    i_color=COLOR_RANDOM())
                     self.add_object(movable_circle)
-            if demo_name == 'triangle':
-                dot_head = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 4)
-                dot_tail = Dot(math.floor(self.field_coordinate_x * 3 / 4),
-                               math.floor(self.field_coordinate_y * 3 / 4))
+            elif demo_name == 'triangle':
+                dot1 = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 4)
+                dot2 = Dot(math.floor(self.field_coordinate_x * 3 / 4),
+                           math.floor(self.field_coordinate_y * 3 / 4))
                 dot3 = Dot(math.floor(self.field_coordinate_x * 1 / 4), math.floor(self.field_coordinate_y * 3 / 4))
-                i_circ1 = PinBoardCircle(i_dot=dot_head, i_radius=25, i_color=COLOR_WHITE)
-                i_circ2 = PinBoardCircle(i_dot=dot_tail, i_radius=25, i_color=COLOR_WHITE)
+                i_circ1 = PinBoardCircle(i_dot=dot1, i_radius=25, i_color=COLOR_WHITE)
+                i_circ2 = PinBoardCircle(i_dot=dot2, i_radius=25, i_color=COLOR_WHITE)
                 i_circ3 = PinBoardCircle(i_dot=dot3, i_radius=25, i_color=COLOR_WHITE)
-                link1 = Line(dot_head, dot_tail, COLOR_RED, False, COLOR_RED, COLOR_RED)
-                i_line2 = Line(dot_tail, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
-                i_line3 = Line(dot_head, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
+                i_line1 = Line(dot1, dot2, COLOR_RED, False, COLOR_RED, COLOR_RED)
+                i_line2 = Line(dot2, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
+                i_line3 = Line(dot1, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
                 self.add_object(i_circ1)
                 self.add_object(i_circ2)
                 self.add_object(i_circ3)
-                self.add_object(link1)
+                self.add_object(i_line1)
                 self.add_object(i_line2)
                 self.add_object(i_line3)
-            if demo_name == 'gradient':
+            elif demo_name == 'gradient':
                 distance = 40 * self.drawing_coef
                 for i in range(1, 19):  # 38
                     for y in range(1, 19):  # 19
                         temp_dot = Dot(distance * i, distance * y)
                         self.add_object(GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
-            if demo_name == 'link':
+            elif demo_name == 'link':
                 dot_tail = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 4)
                 dot_head = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 2)
+                i_line1 = Line(dot_tail, dot_head, COLOR_RED, False, COLOR_RED, COLOR_RED)
                 sneak_head = ChainPiece(None, link_size=500, i_dot=dot_head, i_radius=30, i_color=COLOR_TEAL)
                 sneak_tail = ChainPiece(sneak_head, link_size=500, i_dot=dot_tail, i_radius=30, i_color=COLOR_TEAL)
                 self.add_object(sneak_tail)
                 self.add_object(sneak_head)
+                self.add_object(i_line1)
 
         """
         # TODO this piece of code generates solution for demo iterativly by time slice.
@@ -256,15 +255,10 @@ class ObjectsEngine:
                 obj.vector.energy = round(obj.vector.energy, 3)
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
+
                 # temp - forced moving of head (non-empty-prev-chain piece)
                 if obj.next_link is None:
                     obj.dot_start.x += 10
-
-                if obj.next_link is not None:
-                    # distance = math.sqrt((obj.dot_start.x - obj.next_link.dot_start.x) ** 2 + (obj.dot_start.y - obj.next_link.dot_start.y) ** 2)
-                    if distance > obj.link_size * 6:
-                        obj.dot_start.x += 5
-                        obj.dot_start.y += 5
 
     def get_set_of_objects(self):
         """
@@ -281,6 +275,8 @@ class ObjectsEngine:
 
     @staticmethod
     def mirror_angle_by_y_axis(a):
+
+        answer = a
 
         if a < 0:
             return a * -1
@@ -316,6 +312,8 @@ class ObjectsEngine:
 
     @staticmethod
     def mirror_angle_by_x_axis(a):
+
+        answer = a
 
         if a < 0:
             return a * -1
