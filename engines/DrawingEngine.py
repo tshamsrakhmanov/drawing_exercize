@@ -17,10 +17,12 @@ class DrawingEngine:
             elif isinstance(obj, PinBoardCircle):
                 match obj.active:
                     case True:
-                        self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
-                                                    obj.radius * 2, pixel_array_input, obj.color)
+                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
+                                                math.floor(obj.dot_start.y / self.drawing_coef)),
+                                                    obj.radius, pixel_array_input, obj.color)
                     case False:
-                        self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
+                                                math.floor(obj.dot_start.y / self.drawing_coef)),
                                                     obj.radius, pixel_array_input, obj.color)
             elif isinstance(obj, Vector):
                 obj: Vector
@@ -66,7 +68,8 @@ class DrawingEngine:
                 """
 
             elif isinstance(obj, GradientCircle):
-                self.draw_circle_centerline(Dot(obj.dot_start.x, obj.dot_start.y),
+                self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
+                                                math.floor(obj.dot_start.y / self.drawing_coef)),
                                             obj.actual_size, pixel_array_input, obj.color)
             elif isinstance(obj, Circle):
                 self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),

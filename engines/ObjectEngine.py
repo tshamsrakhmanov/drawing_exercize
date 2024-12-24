@@ -2,7 +2,7 @@ import math
 import random
 
 # import settings.resolution
-from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector
+from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector, Line
 from objects.GeometryObjects import Geometry, Dot
 from settings.colors import *
 
@@ -20,7 +20,7 @@ class ObjectsEngine:
         self.ticker_cache = None
         self.field_coordinate_x = WIDTH * coef
         self.field_coordinate_y = HEIGHT * coef
-        self.coef = coef
+        self.drawing_coef = coef
         self.energy_loss = 0.85
         self.boundary_for_moving_objects = 500
         self.sectoring_factor = segments
@@ -41,7 +41,8 @@ class ObjectsEngine:
 
         return answer
 
-    def update_set_of_objects(self, mouse_pos: tuple, mouse_up: bool, mouse_down: bool, dt: int):
+    def update_set_of_objects(self, mouse_pos: tuple, mouse_up: bool, mouse_down: bool, kb_space: bool, demo_name: str,
+                              dt: int):
         """
         By evoking this method ObjectEngine will update status and all relevant parameters of all objects in modeling space
         :param mouse_pos: provide coordinates of mouse position on the screen
@@ -50,42 +51,65 @@ class ObjectsEngine:
         :return: None
         """
 
-        # Temporary solution to reset sandbox solution
-        # TODO rework all other solution to be reset by a mouse click or any other way
-        if mouse_up:
-            self.set_of_objects.clear()
-            for i in range(72):
-                temp_dot = Dot((mouse_pos[0]) + random.randint(-1000, 1000),
-                               (mouse_pos[1]) + random.randint(-1000, 1000))
-                vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
-                movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
-                                               i_color=COLOR_RANDOM())
-                self.add_object(movable_circle)
+        if kb_space:
+            if demo_name == 'sample_collisions':
+                self.set_of_objects.clear()
+                for i in range(72):
+                    temp_dot = Dot((mouse_pos[0]) + random.randint(-1000, 1000),
+                                   (mouse_pos[1]) + random.randint(-1000, 1000))
+                    vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
+                    movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
+                                                   i_color=COLOR_RANDOM())
+                    self.add_object(movable_circle)
+            if demo_name == 'triangle':
+                dot1 = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 4)
+                dot2 = Dot(math.floor(self.field_coordinate_x * 3 / 4), math.floor(self.field_coordinate_y * 3 / 4))
+                dot3 = Dot(math.floor(self.field_coordinate_x * 1 / 4), math.floor(self.field_coordinate_y * 3 / 4))
+                i_circ1 = PinBoardCircle(i_dot=dot1, i_radius=25, i_color=COLOR_WHITE)
+                i_circ2 = PinBoardCircle(i_dot=dot2, i_radius=25, i_color=COLOR_WHITE)
+                i_circ3 = PinBoardCircle(i_dot=dot3, i_radius=25, i_color=COLOR_WHITE)
+                i_line1 = Line(dot1, dot2, COLOR_RED, False, COLOR_RED, COLOR_RED)
+                i_line2 = Line(dot2, dot3, COLOR_GREEN, False, COLOR_RED, COLOR_RED)
+                i_line3 = Line(dot1, dot3, COLOR_BLUE, False, COLOR_RED, COLOR_RED)
+                self.add_object(i_circ1)
+                self.add_object(i_circ2)
+                self.add_object(i_circ3)
+                self.add_object(i_line1)
+                self.add_object(i_line2)
+                self.add_object(i_line3)
+            if demo_name == 'gradient':
+                distance = 40 * self.drawing_coef
+                for i in range(1, 19):  # 38
+                    for y in range(1, 19):  # 19
+                        temp_dot = Dot(distance * i, distance * y)
+                        self.add_object(GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
 
-        self.timer += dt
+        # TODO this piece of code generates solution for demo iterativly by time slice.
+        #  Need to rework as option flag to program execution - if demo will be resterted.
+        # self.timer += dt
+        #
+        # if self.timer > self.time_previous + 5000:
+        #     self.set_of_objects.clear()
+        #     self.time_previous = 0
+        #     self.timer = 0
+        #
+        #     temp_x = random.randint(500, self.field_coordinate_x)
+        #     temp_y = random.randint(500, self.field_coordinate_y)
+        #     for i in range(72):
+        #         temp_dot = Dot(temp_x + random.randint(-1000, 1000), temp_y + random.randint(-1000, 1000))
+        #         vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
+        #         movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
+        #                                        i_color=COLOR_RANDOM())
+        #         self.add_object(movable_circle)
 
-        if self.timer > self.time_previous + 5000:
-            self.set_of_objects.clear()
-            self.time_previous = 0
-            self.timer = 0
-
-            temp_x = random.randint(500, self.field_coordinate_x)
-            temp_y = random.randint(500, self.field_coordinate_y)
-            for i in range(72):
-                temp_dot = Dot(temp_x + random.randint(-1000, 1000), temp_y + random.randint(-1000, 1000))
-                vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
-                movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
-                                               i_color=COLOR_RANDOM())
-                self.add_object(movable_circle)
-
+        # TODO turn on  this feature only when it'll be needed to optimize FPS for large quantities of objects with collisions
         # Separate algorythm to apply sector id to objects:
-        for obj in self.set_of_objects:
-            if isinstance(obj, MovableCircle):
-                obj.sector_x = obj.vector.dot.x // self.segment_dimension_x
-                obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
+        # for obj in self.set_of_objects:
+        #     if isinstance(obj, MovableCircle):
+        #         obj.sector_x = obj.vector.dot.x // self.segment_dimension_x
+        #         obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
 
         for obj in self.set_of_objects:
-
             if isinstance(obj, GradientCircle):
 
                 """
@@ -106,7 +130,7 @@ class ObjectsEngine:
 
                 distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
 
-                max_dist = 40
+                max_dist = 40 * self.drawing_coef
                 min_dist = 1
                 delta_dist = max_dist - min_dist
 
@@ -122,10 +146,12 @@ class ObjectsEngine:
                     obj.actual_size = int(obj.radius / 4)
                     obj.color = COLOR_RED
             elif isinstance(obj, PinBoardCircle):
+
+                # TODO implement distance calculation only for PinBoardCircle's only reachable for mouse in certain sector (with feature implemented, ofc)
                 distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
 
                 # Feature - focus light of active / inactive circle - p.1
-                if distance < obj.radius:
+                if distance < obj.radius * self.drawing_coef:
                     if obj.active is False:
                         if obj.focus_non_active_ready:
                             obj.focus_non_active_ready = False
@@ -136,7 +162,7 @@ class ObjectsEngine:
                             obj.color = obj.color_active_focused
 
                 # Feature - focus light of active / inactive circle - p.2
-                if distance > obj.radius:
+                if distance > obj.radius * self.drawing_coef:
                     if obj.active is False:
                         obj.color = obj.color_non_active_non_focused
                         obj.focus_non_active_ready = True
@@ -152,7 +178,7 @@ class ObjectsEngine:
 
                 # change status of Interactive circle by mouse click
                 if mouse_up:
-                    if distance < obj.radius:
+                    if distance < obj.radius * self.drawing_coef:
                         if obj.active:
                             obj.active = False
                         else:
