@@ -93,8 +93,8 @@ class ObjectsEngine:
                         temp_dot = Dot(distance * i, distance * y)
                         self.add_object(GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
             elif demo_name == 'link':
-                dot_tail = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 4)
-                dot_head = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 2)
+                dot_tail = Dot(self.field_coordinate_x * 3 / 4, self.field_coordinate_y / 4)
+                dot_head = Dot(self.field_coordinate_x * 3 / 4, self.field_coordinate_y / 2)
                 i_line1 = Line(dot_tail, dot_head, COLOR_RED, False, COLOR_RED, COLOR_RED)
                 sneak_head = ChainPiece(None, link_size=500, i_dot=dot_head, i_radius=30, i_color=COLOR_TEAL)
                 sneak_tail = ChainPiece(sneak_head, link_size=500, i_dot=dot_tail, i_radius=30, i_color=COLOR_TEAL)
@@ -253,12 +253,45 @@ class ObjectsEngine:
                     obj.vector.energy -= 1
 
                 obj.vector.energy = round(obj.vector.energy, 3)
+
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
+                obj.next_link: ChainPiece
 
                 # temp - forced moving of head (non-empty-prev-chain piece)
                 if obj.next_link is None:
-                    obj.dot_start.x += 10
+                    obj.dot_start.x -= 10
+                    obj.dot_start.y -= 5
+                else:
+                    distance = math.floor(math.sqrt((obj.dot_start.x - obj.next_link.dot_start.x) ** 2 + (
+                            obj.dot_start.y - obj.next_link.dot_start.y) ** 2))
+
+                    segmentation = (distance / 200)
+
+                    if distance < 1500:
+                        print(math.floor(distance))
+                    else:
+                        if obj.dot_start.x < obj.next_link.dot_start.x and obj.dot_start.y < obj.next_link.dot_start.y:
+                            obj.dot_start.x += math.floor(segmentation * math.cos(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
+                            obj.dot_start.y += math.floor(segmentation * math.sin(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
+                        elif obj.dot_start.x < obj.next_link.dot_start.x and obj.dot_start.y > obj.next_link.dot_start.y:
+                            obj.dot_start.x += math.floor(segmentation * math.cos(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
+                            obj.dot_start.y -= math.floor(segmentation * math.sin(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
+                        elif obj.dot_start.x > obj.next_link.dot_start.x and obj.dot_start.y < obj.next_link.dot_start.y:
+                            obj.dot_start.x -= math.floor(segmentation * math.cos(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
+                            obj.dot_start.y += math.floor(segmentation * math.sin(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
+                        elif obj.dot_start.x > obj.next_link.dot_start.x and obj.dot_start.y > obj.next_link.dot_start.y:
+                            obj.dot_start.x -= segmentation * math.cos(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x))
+                            obj.dot_start.y -= segmentation * math.sin(
+                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x))
+
 
     def get_set_of_objects(self):
         """

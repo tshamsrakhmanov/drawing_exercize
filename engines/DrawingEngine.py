@@ -28,13 +28,21 @@ class DrawingEngine:
             elif isinstance(obj, Vector):
                 obj: Vector
 
-                VECTOR_VISIBLE_LENGTH = 200
+                VECTOR_VISIBLE_LENGTH = 1000
+
+                # ADJUSTABLE COLORING BY ENERGY
+                # self.draw_line(obj.dot,
+                #                Dot(int(obj.dot.x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
+                #                    int(obj.dot.y + VECTOR_VISIBLE_LENGTH * math.sin(math.radians(obj.degree)))),
+                #                pixel_array_input, (0, int(obj.energy // 255), 0),
+                #                False)
 
                 self.draw_line(obj.dot,
                                Dot(int(obj.dot.x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
                                    int(obj.dot.y + VECTOR_VISIBLE_LENGTH * math.sin(math.radians(obj.degree)))),
-                               pixel_array_input, (0, int(obj.energy // 255), 0),
+                               pixel_array_input, COLOR_RED,
                                False)
+
             elif isinstance(obj, MovableCircle):
                 obj: MovableCircle
                 # base implementation

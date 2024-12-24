@@ -1,3 +1,5 @@
+import math
+
 from objects.GeometryObjects import *
 
 
@@ -47,14 +49,7 @@ class MovableCircle(Circle, InteractiveObject):
 
 
 class ChainPiece(Circle, InteractiveObject):
-    def __init__(self, next_link: InteractiveObject, link_size: int, **kwargs):
+    def __init__(self, next_link: InteractiveObject or None, link_size: int, **kwargs):
         Circle.__init__(self, **kwargs)
         self.next_link = next_link
         self.link_size = link_size
-
-
-class ChainVector(InteractiveObject):
-
-    def __init__(self, dot_tail: Dot, dot_head: Dot):
-        self.dot_tail = dot_tail
-        self.dot_head = dot_head
