@@ -14,16 +14,16 @@ class DrawingEngine:
 
             # based on the object - draw something
             if isinstance(obj, Dot):
-                self.draw_point(Dot(obj.x, obj.y), pixel_array_input, obj.color)
+                self.draw_point(Dot(obj.coordinate_x, obj.coordinate_y), pixel_array_input, obj.color)
             elif isinstance(obj, PinBoardCircle):
                 match obj.active:
                     case True:
-                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
+                        self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                        math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                                     obj.radius, pixel_array_input, obj.color)
                     case False:
-                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
+                        self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                        math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                                     obj.radius, pixel_array_input, obj.color)
             elif isinstance(obj, Vector):
                 obj: Vector
@@ -38,16 +38,16 @@ class DrawingEngine:
                 #                False)
 
                 self.draw_line(obj.dot,
-                               Dot(int(obj.dot.x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
-                                   int(obj.dot.y + VECTOR_VISIBLE_LENGTH * math.sin(math.radians(obj.degree)))),
+                               Dot(int(obj.dot.coordinate_x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
+                                   int(obj.dot.coordinate_y + VECTOR_VISIBLE_LENGTH * math.sin(math.radians(obj.degree)))),
                                pixel_array_input, COLOR_RED,
                                False)
 
             elif isinstance(obj, MovableCircle):
                 obj: MovableCircle
                 # base implementation
-                self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                math.floor(obj.dot_start.y / self.drawing_coef)),
+                self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                             obj.radius, pixel_array_input, obj.color)
 
                 """
@@ -75,26 +75,26 @@ class DrawingEngine:
                                                     obj.radius, pixel_array_input, COLOR_ORANGE)
                 """
             elif isinstance(obj, GradientCircle):
-                self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                math.floor(obj.dot_start.y / self.drawing_coef)),
+                self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                             obj.actual_size, pixel_array_input, obj.color)
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
 
                 # coloring of head - RED
                 if obj.next_link is None:
-                    self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                    math.floor(obj.dot_start.y / self.drawing_coef)),
+                    self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                    math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                                 obj.radius, pixel_array_input, COLOR_RED)
                 # coloring of tail - TEAL
                 else:
-                    self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                    math.floor(obj.dot_start.y / self.drawing_coef)),
+                    self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                    math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                                 obj.radius, pixel_array_input, COLOR_TEAL)
 
             elif isinstance(obj, Circle):
-                self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                math.floor(obj.dot_start.y / self.drawing_coef)),
+                self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                             obj.radius, pixel_array_input, obj.color)
             elif isinstance(obj, Line):
                 self.draw_line(
@@ -135,16 +135,16 @@ class DrawingEngine:
         :return: None
         """
 
-        pixel_array[math.floor((input_point.x + 1) / self.drawing_coef), math.floor(
-            input_point.y / self.drawing_coef)] = input_color
-        pixel_array[math.floor((input_point.x - 1) / self.drawing_coef), math.floor(
-            input_point.y / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x + 1) / self.drawing_coef), math.floor(
+            input_point.coordinate_y / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), math.floor(
+            input_point.coordinate_y / self.drawing_coef)] = input_color
         pixel_array[
-            math.floor(input_point.x / self.drawing_coef), math.floor(input_point.y / self.drawing_coef)] = input_color
-        pixel_array[math.floor(input_point.x / self.drawing_coef), math.floor(
-            (input_point.y - 1) / self.drawing_coef)] = input_color
-        pixel_array[math.floor(input_point.x / self.drawing_coef), math.floor(
-            (input_point.y + 1) / self.drawing_coef)] = input_color
+            math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(input_point.coordinate_y / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
+            (input_point.coordinate_y - 1) / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
+            (input_point.coordinate_y + 1) / self.drawing_coef)] = input_color
 
     def draw_circle_centerline(self, point_center: Dot, radius: int, pixel_array: pygame.PixelArray,
                                color: RGBColor):
@@ -153,14 +153,14 @@ class DrawingEngine:
         err = 0
         while x >= y:
             try:
-                pixel_array[point_center.x + x, point_center.y + y] = color
-                pixel_array[point_center.x + y, point_center.y + x] = color
-                pixel_array[point_center.x - y, point_center.y + x] = color
-                pixel_array[point_center.x - x, point_center.y + y] = color
-                pixel_array[point_center.x - x, point_center.y - y] = color
-                pixel_array[point_center.x - y, point_center.y - x] = color
-                pixel_array[point_center.x + y, point_center.y - x] = color
-                pixel_array[point_center.x + x, point_center.y - y] = color
+                pixel_array[point_center.coordinate_x + x, point_center.coordinate_y + y] = color
+                pixel_array[point_center.coordinate_x + y, point_center.coordinate_y + x] = color
+                pixel_array[point_center.coordinate_x - y, point_center.coordinate_y + x] = color
+                pixel_array[point_center.coordinate_x - x, point_center.coordinate_y + y] = color
+                pixel_array[point_center.coordinate_x - x, point_center.coordinate_y - y] = color
+                pixel_array[point_center.coordinate_x - y, point_center.coordinate_y - x] = color
+                pixel_array[point_center.coordinate_x + y, point_center.coordinate_y - x] = color
+                pixel_array[point_center.coordinate_x + x, point_center.coordinate_y - y] = color
             except Exception:
                 pass
 
@@ -187,10 +187,10 @@ class DrawingEngine:
         :return: None
         """
 
-        x0 = point_start.x
-        x1 = point_end.x
-        y0 = point_start.y
-        y1 = point_end.y
+        x0 = point_start.coordinate_x
+        x1 = point_end.coordinate_x
+        y0 = point_start.coordinate_y
+        y1 = point_end.coordinate_y
 
         dx = abs(x1 - x0)
         sx = 1 if x0 < x1 else -1

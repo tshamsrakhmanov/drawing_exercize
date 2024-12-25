@@ -1,4 +1,6 @@
 import math
+import types
+
 from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector, Line, ChainPiece
 from objects.GeometryObjects import Geometry, Dot
 from settings.colors import *
@@ -50,13 +52,7 @@ class ObjectsEngine:
         """
 
         # Reset scene by space keyboard invoke - avaliable each 1000 secs
-        # self.timer += dt
-
-        # if self.timer > self.time_previous + 1000 and self.started:
-        #     self.set_of_objects.clear()
-        #     self.started = False
-        #     self.time_previous = 0
-        #     self.timer = 0
+        self.timer += dt
 
         if kb_space and not self.started:
             self.started = True
@@ -93,14 +89,30 @@ class ObjectsEngine:
                         temp_dot = Dot(distance * i, distance * y)
                         self.add_object(GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
             elif demo_name == 'link':
-                dot_tail = Dot(self.field_coordinate_x * 3 / 4, self.field_coordinate_y / 4)
-                dot_head = Dot(self.field_coordinate_x * 3 / 4, self.field_coordinate_y / 2)
-                i_line1 = Line(dot_tail, dot_head, COLOR_RED, False, COLOR_RED, COLOR_RED)
-                sneak_head = ChainPiece(None, link_size=500, i_dot=dot_head, i_radius=30, i_color=COLOR_TEAL)
-                sneak_tail = ChainPiece(sneak_head, link_size=500, i_dot=dot_tail, i_radius=30, i_color=COLOR_TEAL)
-                self.add_object(sneak_tail)
+
+                dot_head = Dot(self.field_coordinate_x * 1 / 4, self.field_coordinate_y * 7 / 8)
+                dot_tail1 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 8)
+                dot_tail2 = Dot(self.field_coordinate_x * 1 / 4, self.field_coordinate_y * 1 / 8)
+                dot_tail3 = Dot(self.field_coordinate_x * 1 / 6, self.field_coordinate_y * 1 / 8)
+                dot_tail4 = Dot(self.field_coordinate_x * 1 / 6, self.field_coordinate_y * 1 / 8)
+                dot_tail5 = Dot(self.field_coordinate_x * 1 / 6, self.field_coordinate_y * 1 / 8)
+
+                sneak_head = PinBoardCircle(i_dot=dot_head, i_radius=25, i_color=COLOR_WHITE)
+                sneak_tail1 = ChainPiece(sneak_head, link_size=500, i_dot=dot_tail1, i_radius=30, i_color=COLOR_TEAL)
+                sneak_tail2 = ChainPiece(sneak_tail1, link_size=500, i_dot=dot_tail2, i_radius=30, i_color=COLOR_TEAL)
+                sneak_tail3 = ChainPiece(sneak_tail2, link_size=500, i_dot=dot_tail3, i_radius=30, i_color=COLOR_TEAL)
+                sneak_tail4 = ChainPiece(sneak_tail3, link_size=500, i_dot=dot_tail4, i_radius=30, i_color=COLOR_TEAL)
+                sneak_tail5 = ChainPiece(sneak_tail4, link_size=500, i_dot=dot_tail5, i_radius=30, i_color=COLOR_TEAL)
+
+                line1 = Line(dot_head, dot_tail1, COLOR_RED, False, COLOR_RED)
+
                 self.add_object(sneak_head)
-                self.add_object(i_line1)
+                self.add_object(sneak_tail1)
+                self.add_object(sneak_tail2)
+                self.add_object(sneak_tail3)
+                self.add_object(sneak_tail4)
+                self.add_object(sneak_tail5)
+                # self.add_object(line1)
 
         """
         # TODO this piece of code generates solution for demo iterativly by time slice.
@@ -129,7 +141,15 @@ class ObjectsEngine:
         #         obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
         """
 
+        options = types.SimpleNamespace()
+
+        options.GradientCircle = GradientCircle
+        options.PinBoardCircle = PinBoardCircle
+        options.MovableCircle = MovableCircle
+        options.ChainPiece = ChainPiece
+
         for obj in self.set_of_objects:
+
             if isinstance(obj, GradientCircle):
 
                 """
@@ -137,7 +157,7 @@ class ObjectsEngine:
                 Sort-of-implementation due to enormous volume of fine tuning
                 This values of proportions are tested /good/ with following matrix:
 
-                '
+                
                 distance = 40
 
                 for i in range(1, 38): # 38
@@ -145,10 +165,10 @@ class ObjectsEngine:
                         temp_dot = Dot(distance * i, distance * y)
                         objects_buffer.append(
                             GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
-                '
                 """
 
-                distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
+                distance = math.sqrt((mouse_pos[0] - obj.center_point.coordinate_x) ** 2 + (
+                        mouse_pos[1] - obj.center_point.coordinate_y) ** 2)
 
                 max_dist = 40 * self.drawing_coef
                 min_dist = 1
@@ -168,7 +188,8 @@ class ObjectsEngine:
             elif isinstance(obj, PinBoardCircle):
 
                 # TODO implement distance calculation only for PinBoardCircle's only reachable for mouse in certain sector (with feature implemented, ofc)
-                distance = math.sqrt((mouse_pos[0] - obj.dot_start.x) ** 2 + (mouse_pos[1] - obj.dot_start.y) ** 2)
+                distance = math.sqrt((mouse_pos[0] - obj.center_point.coordinate_x) ** 2 + (
+                        mouse_pos[1] - obj.center_point.coordinate_y) ** 2)
 
                 # Feature - focus light of active / inactive circle - p.1
                 if distance < obj.radius * self.drawing_coef:
@@ -193,8 +214,8 @@ class ObjectsEngine:
                 # snapping Interactive Circle to mouse cursor while active = True
                 if obj.movable and obj.active:
                     obj.color = obj.color_active_focused
-                    obj.dot_start.x = mouse_pos[0]
-                    obj.dot_start.y = mouse_pos[1]
+                    obj.center_point.coordinate_x = mouse_pos[0]
+                    obj.center_point.coordinate_y = mouse_pos[1]
 
                 # change status of Interactive circle by mouse click
                 if mouse_up:
@@ -207,25 +228,25 @@ class ObjectsEngine:
                 obj: MovableCircle
 
                 # apply sectoring
-                obj.sector_x = obj.vector.dot.x // self.segment_dimension_x
-                obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
+                obj.sector_x = obj.vector.dot.coordinate_x // self.segment_dimension_x
+                obj.sector_y = obj.vector.dot.coordinate_y // self.segment_dimension_y
 
                 # CONDITION - WALL HIT
-                if obj.dot_start.y < self.boundary_for_moving_objects:
+                if obj.center_point.coordinate_y < self.boundary_for_moving_objects:
                     obj.vector.energy *= self.energy_loss
-                    obj.dot_start.y = self.boundary_for_moving_objects
+                    obj.center_point.coordinate_y = self.boundary_for_moving_objects
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
-                elif obj.dot_start.y > self.field_coordinate_y - self.boundary_for_moving_objects:
+                elif obj.center_point.coordinate_y > self.field_coordinate_y - self.boundary_for_moving_objects:
                     obj.vector.energy *= self.energy_loss
-                    obj.dot_start.y = self.field_coordinate_y - self.boundary_for_moving_objects
+                    obj.center_point.coordinate_y = self.field_coordinate_y - self.boundary_for_moving_objects
                     obj.vector.degree = self.mirror_angle_by_x_axis(obj.vector.degree)
-                elif obj.dot_start.x < self.boundary_for_moving_objects:
+                elif obj.center_point.coordinate_x < self.boundary_for_moving_objects:
                     obj.vector.energy *= self.energy_loss
-                    obj.dot_start.x = self.boundary_for_moving_objects + 1
+                    obj.center_point.coordinate_x = self.boundary_for_moving_objects + 1
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
-                elif obj.dot_start.x > self.field_coordinate_x - self.boundary_for_moving_objects:
+                elif obj.center_point.coordinate_x > self.field_coordinate_x - self.boundary_for_moving_objects:
                     obj.vector.energy *= self.energy_loss
-                    obj.dot_start.x = self.field_coordinate_x - self.boundary_for_moving_objects - 1
+                    obj.center_point.coordinate_x = self.field_coordinate_x - self.boundary_for_moving_objects - 1
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
 
                 # CONDITION - ANOTHER BALL HIT
@@ -246,57 +267,39 @@ class ObjectsEngine:
 
                 # GENERAL - LINEAR MOVEMENT BY VECTOR
                 if obj.vector.energy > 0:
-                    obj.vector.dot.x += math.floor(
+                    obj.vector.dot.coordinate_x += math.floor(
                         (dt * (obj.vector.energy / 100)) * math.cos(math.radians(obj.vector.degree)))
-                    obj.vector.dot.y += math.floor(
+                    obj.vector.dot.coordinate_y += math.floor(
                         (dt * (obj.vector.energy / 100)) * math.sin(math.radians(obj.vector.degree)))
                     obj.vector.energy -= 1
 
                 obj.vector.energy = round(obj.vector.energy, 3)
-
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
                 obj.next_link: ChainPiece
 
-                # temp - forced moving of head (non-empty-prev-chain piece)
                 if obj.next_link is None:
-                    obj.dot_start.x -= 10
-                    obj.dot_start.y -= 5
-                else:
-                    distance = math.floor(math.sqrt((obj.dot_start.x - obj.next_link.dot_start.x) ** 2 + (
-                            obj.dot_start.y - obj.next_link.dot_start.y) ** 2))
+                    obj.center_point.coordinate_x += 10
 
-                    segmentation = (distance / 200)
+                if obj.next_link is not None:
 
-                    if distance < 1500:
-                        print(math.floor(distance))
-                    else:
+                    distance = math.floor(
+                        math.sqrt((obj.center_point.coordinate_x - obj.next_link.center_point.coordinate_x) ** 2 + (
+                                obj.center_point.coordinate_y - obj.next_link.center_point.coordinate_y) ** 2))
 
-                        # TODO this whole block MUST be rewrote to have
-                        #  math.degrees(math.atan2(Y_DIM,X_DIM))
-                        #  this formulae will be possible return negative results - to wrap it to have only positives,
-                        #  according to engine
+                    raw_angle = round(self.negative_to_positive(math.degrees(
+                        math.atan2(obj.next_link.center_point.coordinate_y - obj.center_point.coordinate_y,
+                                   obj.next_link.center_point.coordinate_x - obj.center_point.coordinate_x))), 3)
 
-                        if obj.dot_start.x < obj.next_link.dot_start.x and obj.dot_start.y < obj.next_link.dot_start.y:
-                            obj.dot_start.x += math.floor(segmentation * math.cos(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
-                            obj.dot_start.y += math.floor(segmentation * math.sin(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
-                        elif obj.dot_start.x < obj.next_link.dot_start.x and obj.dot_start.y > obj.next_link.dot_start.y:
-                            obj.dot_start.x += math.floor(segmentation * math.cos(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
-                            obj.dot_start.y -= math.floor(segmentation * math.sin(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
-                        elif obj.dot_start.x > obj.next_link.dot_start.x and obj.dot_start.y < obj.next_link.dot_start.y:
-                            obj.dot_start.x -= math.floor(segmentation * math.cos(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
-                            obj.dot_start.y += math.floor(segmentation * math.sin(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
-                        elif obj.dot_start.x > obj.next_link.dot_start.x and obj.dot_start.y > obj.next_link.dot_start.y:
-                            obj.dot_start.x -= segmentation * math.cos(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x))
-                            obj.dot_start.y -= segmentation * math.sin(
-                                math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x))
+                    dx = math.floor((distance / 10) * math.cos(math.radians(raw_angle)))
+                    dy = math.floor((distance / 10) * math.sin(math.radians(raw_angle)))
+
+                    # print('ang:', str(raw_angle).ljust(7), 'DX:', str(dx).ljust(3), 'DY:', str(dy).ljust(3), 'DIST',
+                    #       str(distance).ljust(6))
+
+                    if distance > 500:
+                        obj.center_point.coordinate_x += dx
+                        obj.center_point.coordinate_y += dy
 
     def get_set_of_objects(self):
         """
@@ -386,3 +389,10 @@ class ObjectsEngine:
 
         # return answer + random.randint(0, 15)
         return answer + 1
+
+    @staticmethod
+    def negative_to_positive(a):
+        angle = a % 360
+        if angle < 0:
+            angle += 360
+        return angle

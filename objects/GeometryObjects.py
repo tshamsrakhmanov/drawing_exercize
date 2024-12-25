@@ -9,11 +9,11 @@ class Geometry:
 class Dot(Geometry):
     def __init__(self, i_x, i_y, i_color: RGBColor = COLOR_WHITE):
         super().__init__(i_color)
-        self.x = i_x
-        self.y = i_y
+        self.coordinate_x = i_x
+        self.coordinate_y = i_y
 
     def __repr__(self):
-        return f'Dot({self.x},{self.y})'
+        return f'Dot({self.coordinate_x},{self.coordinate_y})'
 
 
 class Line(Geometry):
@@ -28,14 +28,14 @@ class Line(Geometry):
         self.color_point_end = color_point_end
 
     def __repr__(self):
-        return f'Line({self.dot_start.x},{self.dot_start.y} - {self.dot_end.x},{self.dot_end.y})'
+        return f'Line({self.dot_start.coordinate_x},{self.dot_start.coordinate_y} - {self.dot_end.coordinate_x},{self.dot_end.coordinate_y})'
 
 
 class Circle(Geometry):
     def __init__(self, i_dot: Dot, i_radius: int, **kwargs):
         super().__init__(**kwargs)
-        self.dot_start = i_dot
+        self.center_point = i_dot
         self.radius = i_radius
 
     def __repr__(self):
-        return f'Cicrle({self.dot_start.x},{self.dot_start.y} - {self.radius} - {self.color})'
+        return f'Cicrle({self.center_point.coordinate_x},{self.center_point.coordinate_y} - {self.radius} - {self.color})'
