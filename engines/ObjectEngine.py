@@ -271,6 +271,12 @@ class ObjectsEngine:
                     if distance < 1500:
                         print(math.floor(distance))
                     else:
+
+                        # TODO this whole block MUST be rewrote to have
+                        #  math.degrees(math.atan2(Y_DIM,X_DIM))
+                        #  this formulae will be possible return negative results - to wrap it to have only positives,
+                        #  according to engine
+
                         if obj.dot_start.x < obj.next_link.dot_start.x and obj.dot_start.y < obj.next_link.dot_start.y:
                             obj.dot_start.x += math.floor(segmentation * math.cos(
                                 math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x)))
@@ -291,7 +297,6 @@ class ObjectsEngine:
                                 math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x))
                             obj.dot_start.y -= segmentation * math.sin(
                                 math.atan2(obj.next_link.dot_start.y, obj.next_link.dot_start.x))
-
 
     def get_set_of_objects(self):
         """
