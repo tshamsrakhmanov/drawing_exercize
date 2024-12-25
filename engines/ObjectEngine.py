@@ -2,7 +2,7 @@ import math
 import types
 
 from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector, Line, ChainPiece
-from objects.GeometryObjects import Geometry, Dot
+from objects.GeometryObjects import Dot
 from settings.colors import *
 
 
@@ -20,7 +20,7 @@ class ObjectsEngine:
         self.field_coordinate_x = WIDTH * coef
         self.field_coordinate_y = HEIGHT * coef
         self.drawing_coef = coef
-        self.energy_loss = 0.85
+        self.energy_loss = 0.95
         self.boundary_for_moving_objects = 500
         self.sectoring_factor = segments
         self.segment_dimension_x = int(self.field_coordinate_x / self.sectoring_factor)
@@ -58,12 +58,98 @@ class ObjectsEngine:
             self.started = True
             if demo_name == 'sample_collisions':
                 self.set_of_objects.clear()
-                for i in range(72):
-                    temp_dot = Dot((mouse_pos[0]) + random.randint(-1000, 1000),
-                                   (mouse_pos[1]) + random.randint(-1000, 1000))
-                    vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
+
+                sectors_qnty = 5
+
+                for i in range(sectors_qnty):
+                    temp_dot = Dot((mouse_pos[0]) + random.randint(-500, 500),
+                                   (mouse_pos[1]) + random.randint(-500, 500))
+                    vector_1 = Vector(float(360 * i /sectors_qnty) + 14, temp_dot, energy_input=float(random.randint(1500, 3000)))
                     movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
                                                    i_color=COLOR_RANDOM())
+
+                    dot_tail1 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail2 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail3 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail4 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail5 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail6 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail7 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail8 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail9 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail10 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail11 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail12 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail13 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail14 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail15 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail16 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail17 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail18 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail19 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+                    dot_tail20 = Dot(temp_dot.coordinate_x, temp_dot.coordinate_y)
+
+                    sneak_tail1 = ChainPiece(movable_circle, link_size=29, i_dot=dot_tail1, i_radius=30,
+                                             i_color=(255, 0, 0))
+                    sneak_tail2 = ChainPiece(sneak_tail1, link_size=28, i_dot=dot_tail2, i_radius=30,
+                                             i_color=(255, 40, 0))
+                    sneak_tail3 = ChainPiece(sneak_tail2, link_size=27, i_dot=dot_tail3, i_radius=30,
+                                             i_color=(255, 80, 0))
+                    sneak_tail4 = ChainPiece(sneak_tail3, link_size=26, i_dot=dot_tail4, i_radius=30,
+                                             i_color=(255, 140, 0))
+                    sneak_tail5 = ChainPiece(sneak_tail4, link_size=25, i_dot=dot_tail5, i_radius=30,
+                                             i_color=(255, 178, 0))
+                    sneak_tail6 = ChainPiece(sneak_tail5, link_size=24, i_dot=dot_tail6, i_radius=30,
+                                             i_color=(255, 216, 0))
+                    sneak_tail7 = ChainPiece(sneak_tail6, link_size=23, i_dot=dot_tail7, i_radius=30,
+                                             i_color=(255, 255, 0))
+                    sneak_tail8 = ChainPiece(sneak_tail7, link_size=22, i_dot=dot_tail8, i_radius=30,
+                                             i_color=(170, 216, 0))
+                    sneak_tail9 = ChainPiece(sneak_tail8, link_size=21, i_dot=dot_tail9, i_radius=30,
+                                             i_color=(85, 176, 0))
+                    sneak_tail10 = ChainPiece(sneak_tail9, link_size=20, i_dot=dot_tail10, i_radius=30,
+                                              i_color=(0, 140, 0))
+                    sneak_tail11 = ChainPiece(sneak_tail10, link_size=19, i_dot=dot_tail11, i_radius=30,
+                                              i_color=(0, 156, 85))
+                    sneak_tail12 = ChainPiece(sneak_tail11, link_size=18, i_dot=dot_tail12, i_radius=30,
+                                              i_color=(0, 173, 170))
+                    sneak_tail13 = ChainPiece(sneak_tail12, link_size=17, i_dot=dot_tail13, i_radius=30,
+                                              i_color=(0, 191, 255))
+                    sneak_tail14 = ChainPiece(sneak_tail13, link_size=16, i_dot=dot_tail14, i_radius=30,
+                                              i_color=(0, 127, 238))
+                    sneak_tail15 = ChainPiece(sneak_tail14, link_size=15, i_dot=dot_tail15, i_radius=30,
+                                              i_color=(0, 64, 221))
+                    sneak_tail16 = ChainPiece(sneak_tail15, link_size=14, i_dot=dot_tail16, i_radius=30,
+                                              i_color=(0, 0, 205))
+                    sneak_tail17 = ChainPiece(sneak_tail16, link_size=13, i_dot=dot_tail17, i_radius=30,
+                                              i_color=(46, 0, 183))
+                    sneak_tail18 = ChainPiece(sneak_tail17, link_size=12, i_dot=dot_tail18, i_radius=30,
+                                              i_color=(92, 0, 161))
+                    sneak_tail19 = ChainPiece(sneak_tail18, link_size=11, i_dot=dot_tail19, i_radius=30,
+                                              i_color=(140, 0, 140))
+                    sneak_tail20 = ChainPiece(sneak_tail19, link_size=10, i_dot=dot_tail20, i_radius=30,
+                                              i_color=(140, 0, 140))
+
+                    self.add_object(sneak_tail1)
+                    self.add_object(sneak_tail2)
+                    self.add_object(sneak_tail3)
+                    self.add_object(sneak_tail4)
+                    self.add_object(sneak_tail5)
+                    self.add_object(sneak_tail6)
+                    self.add_object(sneak_tail7)
+                    self.add_object(sneak_tail8)
+                    self.add_object(sneak_tail9)
+                    self.add_object(sneak_tail10)
+                    self.add_object(sneak_tail11)
+                    self.add_object(sneak_tail12)
+                    self.add_object(sneak_tail13)
+                    self.add_object(sneak_tail14)
+                    self.add_object(sneak_tail15)
+                    self.add_object(sneak_tail16)
+                    self.add_object(sneak_tail17)
+                    self.add_object(sneak_tail18)
+                    self.add_object(sneak_tail19)
+                    self.add_object(sneak_tail20)
                     self.add_object(movable_circle)
             elif demo_name == 'triangle':
                 dot1 = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 4)
@@ -90,21 +176,49 @@ class ObjectsEngine:
                         self.add_object(GradientCircle(i_dot=temp_dot, i_radius=10, i_color=COLOR_WHITE))
             elif demo_name == 'link':
 
-                dot_head = Dot(self.field_coordinate_x * 1 / 4, self.field_coordinate_y * 7 / 8)
-                dot_tail1 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 8)
-                dot_tail2 = Dot(self.field_coordinate_x * 1 / 4, self.field_coordinate_y * 1 / 8)
-                dot_tail3 = Dot(self.field_coordinate_x * 1 / 6, self.field_coordinate_y * 1 / 8)
-                dot_tail4 = Dot(self.field_coordinate_x * 1 / 6, self.field_coordinate_y * 1 / 8)
-                dot_tail5 = Dot(self.field_coordinate_x * 1 / 6, self.field_coordinate_y * 1 / 8)
+                dot_head = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail1 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail2 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail3 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail4 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail5 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail6 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail7 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail8 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail9 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail10 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail11 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail12 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail13 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail14 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail15 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail16 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail17 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail18 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail19 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
+                dot_tail20 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
 
-                sneak_head = PinBoardCircle(i_dot=dot_head, i_radius=25, i_color=COLOR_WHITE)
-                sneak_tail1 = ChainPiece(sneak_head, link_size=500, i_dot=dot_tail1, i_radius=30, i_color=COLOR_TEAL)
-                sneak_tail2 = ChainPiece(sneak_tail1, link_size=500, i_dot=dot_tail2, i_radius=30, i_color=COLOR_TEAL)
-                sneak_tail3 = ChainPiece(sneak_tail2, link_size=500, i_dot=dot_tail3, i_radius=30, i_color=COLOR_TEAL)
-                sneak_tail4 = ChainPiece(sneak_tail3, link_size=500, i_dot=dot_tail4, i_radius=30, i_color=COLOR_TEAL)
-                sneak_tail5 = ChainPiece(sneak_tail4, link_size=500, i_dot=dot_tail5, i_radius=30, i_color=COLOR_TEAL)
-
-                line1 = Line(dot_head, dot_tail1, COLOR_RED, False, COLOR_RED)
+                sneak_head = PinBoardCircle(i_dot=dot_head, i_radius=30, i_color=COLOR_WHITE)
+                sneak_tail1 = ChainPiece(sneak_head, link_size=29, i_dot=dot_tail1, i_radius=30, i_color=(255,0,0))
+                sneak_tail2 = ChainPiece(sneak_tail1, link_size=28, i_dot=dot_tail2, i_radius=30, i_color=(255,40,0))
+                sneak_tail3 = ChainPiece(sneak_tail2, link_size=27, i_dot=dot_tail3, i_radius=30, i_color=(255,80,0))
+                sneak_tail4 = ChainPiece(sneak_tail3, link_size=26, i_dot=dot_tail4, i_radius=30, i_color=(255,140,0))
+                sneak_tail5 = ChainPiece(sneak_tail4, link_size=25, i_dot=dot_tail5, i_radius=30, i_color=(255,178,0))
+                sneak_tail6 = ChainPiece(sneak_tail5, link_size=24, i_dot=dot_tail6, i_radius=30, i_color=(255,216,0))
+                sneak_tail7 = ChainPiece(sneak_tail6, link_size=23, i_dot=dot_tail7, i_radius=30, i_color=(255,255,0))
+                sneak_tail8 = ChainPiece(sneak_tail7, link_size=22, i_dot=dot_tail8, i_radius=30, i_color=(170,216,0))
+                sneak_tail9 = ChainPiece(sneak_tail8, link_size=21, i_dot=dot_tail9, i_radius=30, i_color=(85,176,0))
+                sneak_tail10 = ChainPiece(sneak_tail9, link_size=20, i_dot=dot_tail10, i_radius=30, i_color=(0,140,0))
+                sneak_tail11 = ChainPiece(sneak_tail10, link_size=19, i_dot=dot_tail11, i_radius=30, i_color=(0,156,85))
+                sneak_tail12 = ChainPiece(sneak_tail11, link_size=18, i_dot=dot_tail12, i_radius=30, i_color=(0,173,170))
+                sneak_tail13 = ChainPiece(sneak_tail12, link_size=17, i_dot=dot_tail13, i_radius=30, i_color=(0,191,255))
+                sneak_tail14 = ChainPiece(sneak_tail13, link_size=16, i_dot=dot_tail14, i_radius=30, i_color=(0,127,238))
+                sneak_tail15 = ChainPiece(sneak_tail14, link_size=15, i_dot=dot_tail15, i_radius=30, i_color=(0,64,221))
+                sneak_tail16 = ChainPiece(sneak_tail15, link_size=14, i_dot=dot_tail16, i_radius=30, i_color=(0,0,205))
+                sneak_tail17 = ChainPiece(sneak_tail16, link_size=13, i_dot=dot_tail17, i_radius=30, i_color=(46,0,183))
+                sneak_tail18 = ChainPiece(sneak_tail17, link_size=12, i_dot=dot_tail18, i_radius=30, i_color=(92,0,161))
+                sneak_tail19 = ChainPiece(sneak_tail18, link_size=11, i_dot=dot_tail19, i_radius=30, i_color=(140,0,140))
+                sneak_tail20 = ChainPiece(sneak_tail19, link_size=10 , i_dot=dot_tail20, i_radius=30, i_color=(140,0,140))
 
                 self.add_object(sneak_head)
                 self.add_object(sneak_tail1)
@@ -112,7 +226,22 @@ class ObjectsEngine:
                 self.add_object(sneak_tail3)
                 self.add_object(sneak_tail4)
                 self.add_object(sneak_tail5)
-                # self.add_object(line1)
+                self.add_object(sneak_tail6)
+                self.add_object(sneak_tail7)
+                self.add_object(sneak_tail8)
+                self.add_object(sneak_tail9)
+                self.add_object(sneak_tail10)
+                self.add_object(sneak_tail11)
+                self.add_object(sneak_tail12)
+                self.add_object(sneak_tail13)
+                self.add_object(sneak_tail14)
+                self.add_object(sneak_tail15)
+                self.add_object(sneak_tail16)
+                self.add_object(sneak_tail17)
+                self.add_object(sneak_tail18)
+                self.add_object(sneak_tail19)
+                self.add_object(sneak_tail20)
+
 
         """
         # TODO this piece of code generates solution for demo iterativly by time slice.
@@ -140,13 +269,6 @@ class ObjectsEngine:
         #         obj.sector_x = obj.vector.dot.x // self.segment_dimension_x
         #         obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
         """
-
-        options = types.SimpleNamespace()
-
-        options.GradientCircle = GradientCircle
-        options.PinBoardCircle = PinBoardCircle
-        options.MovableCircle = MovableCircle
-        options.ChainPiece = ChainPiece
 
         for obj in self.set_of_objects:
 
@@ -271,15 +393,12 @@ class ObjectsEngine:
                         (dt * (obj.vector.energy / 100)) * math.cos(math.radians(obj.vector.degree)))
                     obj.vector.dot.coordinate_y += math.floor(
                         (dt * (obj.vector.energy / 100)) * math.sin(math.radians(obj.vector.degree)))
-                    obj.vector.energy -= 1
+                    # obj.vector.energy -= 1
 
                 obj.vector.energy = round(obj.vector.energy, 3)
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
                 obj.next_link: ChainPiece
-
-                if obj.next_link is None:
-                    obj.center_point.coordinate_x += 10
 
                 if obj.next_link is not None:
 
@@ -291,13 +410,10 @@ class ObjectsEngine:
                         math.atan2(obj.next_link.center_point.coordinate_y - obj.center_point.coordinate_y,
                                    obj.next_link.center_point.coordinate_x - obj.center_point.coordinate_x))), 3)
 
-                    dx = math.floor((distance / 10) * math.cos(math.radians(raw_angle)))
-                    dy = math.floor((distance / 10) * math.sin(math.radians(raw_angle)))
+                    dx = math.floor((distance / 3) * math.cos(math.radians(raw_angle)))
+                    dy = math.floor((distance / 3) * math.sin(math.radians(raw_angle)))
 
-                    # print('ang:', str(raw_angle).ljust(7), 'DX:', str(dx).ljust(3), 'DY:', str(dy).ljust(3), 'DIST',
-                    #       str(distance).ljust(6))
-
-                    if distance > 500:
+                    if distance > 25:
                         obj.center_point.coordinate_x += dx
                         obj.center_point.coordinate_y += dy
 
@@ -308,10 +424,10 @@ class ObjectsEngine:
         """
         return self.set_of_objects
 
-    def add_object(self, input_object: Geometry):
+    def add_object(self, input_object):
         self.set_of_objects.add(input_object)
 
-    def remove_object(self, input_object: Geometry):
+    def remove_object(self, input_object):
         self.set_of_objects.remove(input_object)
 
     @staticmethod

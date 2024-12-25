@@ -38,18 +38,19 @@ class DrawingEngine:
                 #                False)
 
                 self.draw_line(obj.dot,
-                               Dot(int(obj.dot.coordinate_x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
-                                   int(obj.dot.coordinate_y + VECTOR_VISIBLE_LENGTH * math.sin(math.radians(obj.degree)))),
+                               Dot(int(
+                                   obj.dot.coordinate_x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
+                                   int(obj.dot.coordinate_y + VECTOR_VISIBLE_LENGTH * math.sin(
+                                       math.radians(obj.degree)))),
                                pixel_array_input, COLOR_RED,
                                False)
-
             elif isinstance(obj, MovableCircle):
                 obj: MovableCircle
                 # base implementation
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                 math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
-                                            obj.radius, pixel_array_input, obj.color)
-
+                                            obj.radius, pixel_array_input, obj.i_color)
+                pass
                 """
                 Section of code, which coloring movable circles according to the sectors's number which they belong at the moment
                 Works 100% fine
@@ -81,17 +82,9 @@ class DrawingEngine:
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
 
-                # coloring of head - RED
-                if obj.next_link is None:
-                    self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
-                                                    math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
-                                                obj.radius, pixel_array_input, COLOR_RED)
-                # coloring of tail - TEAL
-                else:
-                    self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
-                                                    math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
-                                                obj.radius, pixel_array_input, COLOR_TEAL)
-
+                self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
+                                                math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
+                                            obj.link_size, pixel_array_input, obj.i_color)
             elif isinstance(obj, Circle):
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                 math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
@@ -140,7 +133,8 @@ class DrawingEngine:
         pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), math.floor(
             input_point.coordinate_y / self.drawing_coef)] = input_color
         pixel_array[
-            math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(input_point.coordinate_y / self.drawing_coef)] = input_color
+            math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
+                input_point.coordinate_y / self.drawing_coef)] = input_color
         pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
             (input_point.coordinate_y - 1) / self.drawing_coef)] = input_color
         pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
