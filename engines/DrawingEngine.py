@@ -14,33 +14,26 @@ class DrawingEngine:
 
             # based on the object - draw something
             if isinstance(obj, Dot):
-                self.draw_point(Dot(obj.coordinate_x, obj.coordinate_y), pixel_array_input, obj.color)
+                self.draw_point(Dot(obj.coordinate_x, obj.coordinate_y), pixel_array_input, obj.i_color)
             elif isinstance(obj, PinBoardCircle):
                 match obj.active:
                     case True:
                         self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                         math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
-                                                    obj.radius, pixel_array_input, obj.color)
+                                                    obj.radius, pixel_array_input, obj.i_color)
                     case False:
                         self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                         math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
-                                                    obj.radius, pixel_array_input, obj.color)
+                                                    obj.radius, pixel_array_input, obj.i_color)
             elif isinstance(obj, Vector):
                 obj: Vector
 
-                VECTOR_VISIBLE_LENGTH = 1000
-
-                # ADJUSTABLE COLORING BY ENERGY
-                # self.draw_line(obj.dot,
-                #                Dot(int(obj.dot.x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
-                #                    int(obj.dot.y + VECTOR_VISIBLE_LENGTH * math.sin(math.radians(obj.degree)))),
-                #                pixel_array_input, (0, int(obj.energy // 255), 0),
-                #                False)
+                vector_visible_length = 1000
 
                 self.draw_line(obj.dot,
                                Dot(int(
-                                   obj.dot.coordinate_x + VECTOR_VISIBLE_LENGTH * math.cos(math.radians(obj.degree))),
-                                   int(obj.dot.coordinate_y + VECTOR_VISIBLE_LENGTH * math.sin(
+                                   obj.dot.coordinate_x + vector_visible_length * math.cos(math.radians(obj.degree))),
+                                   int(obj.dot.coordinate_y + vector_visible_length * math.sin(
                                        math.radians(obj.degree)))),
                                pixel_array_input, COLOR_RED,
                                False)
@@ -50,35 +43,10 @@ class DrawingEngine:
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                 math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                             obj.radius, pixel_array_input, obj.i_color)
-                pass
-                """
-                Section of code, which coloring movable circles according to the sectors's number which they belong at the moment
-                Works 100% fine
-                if obj.sector_x % 2 == 0:
-                    if obj.sector_y % 2 == 0:
-
-                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
-                                                    obj.radius, pixel_array_input, COLOR_RED)
-                    else:
-                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
-                                                    obj.radius, pixel_array_input, COLOR_GREEN)
-                else:
-                    if obj.sector_y % 2 == 0:
-
-                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
-                                                    obj.radius, pixel_array_input, COLOR_BLUE)
-                    else:
-                        self.draw_circle_centerline(Dot(math.floor(obj.dot_start.x / self.drawing_coef),
-                                                        math.floor(obj.dot_start.y / self.drawing_coef)),
-                                                    obj.radius, pixel_array_input, COLOR_ORANGE)
-                """
             elif isinstance(obj, GradientCircle):
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                 math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
-                                            obj.actual_size, pixel_array_input, obj.color)
+                                            obj.actual_size, pixel_array_input, obj.i_color)
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
 
@@ -88,35 +56,11 @@ class DrawingEngine:
             elif isinstance(obj, Circle):
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                 math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
-                                            obj.radius, pixel_array_input, obj.color)
+                                            obj.radius, pixel_array_input, obj.i_color)
             elif isinstance(obj, Line):
                 self.draw_line(
                     obj.dot_start, obj.dot_end, pixel_array_input, obj.color, obj.is_pointed, obj.color_point_start,
                     obj.color_point_end)
-
-    """
-    Abandon this algo as a Ravenholm, please
-    def draw_circle(self, point: Dot, radius: int, pixel_array: pygame.pixelarray, input_color: RGBColor = COLOR_WHITE):
-        Add circle (filled) to the screen
-        :param point: Center point of circle
-        :param radius: Radius of circle in pixels
-        :param pixel_array: pixel_array to draw a circle
-        :param input_color: Color for drawing
-        :return: None
-        for dx in range(radius):
-            for dy in range(radius):
-                if dx ** 2 + dy ** 2 <= radius ** 2:
-
-                    if self.is_in_array(dx + point.x, dy + point.y):
-                        pixel_array[math.floor((dx + point.x) / self.drawing_coef), math.floor((dy + point.y) / self.drawing_coef)] = input_color
-                    if self.is_in_array(dx + point.x, -dy + point.y):
-                        pixel_array[math.floor((dx + point.x) / self.drawing_coef), math.floor((-dy + point.y) / self.drawing_coef)] = input_color
-                    if self.is_in_array(-dx + point.x, dy + point.y):
-                        pixel_array[math.floor((-dx + point.x) / self.drawing_coef), math.floor((dy + point.y) / self.drawing_coef)] = input_color
-                    if self.is_in_array(-dx + point.x, -dy + point.y):
-                        pixel_array[math.floor((-dx + point.x) / self.drawing_coef), math.floor((-dy + point.y) / self.drawing_coef)] = input_color
-    
-    """
 
     def draw_point(self, input_point: Dot, pixel_array: pygame.PixelArray,
                    input_color: RGBColor = COLOR_WHITE):
@@ -140,12 +84,14 @@ class DrawingEngine:
         pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
             (input_point.coordinate_y + 1) / self.drawing_coef)] = input_color
 
+    # noinspection PyMethodMayBeStatic
     def draw_circle_centerline(self, point_center: Dot, radius: int, pixel_array: pygame.PixelArray,
                                color: RGBColor):
         x = radius
         y = 0
         err = 0
         while x >= y:
+            # noinspection PyBroadException
             try:
                 pixel_array[point_center.coordinate_x + x, point_center.coordinate_y + y] = color
                 pixel_array[point_center.coordinate_x + y, point_center.coordinate_y + x] = color
@@ -194,6 +140,7 @@ class DrawingEngine:
         error = dx + dy
 
         while True:
+            # noinspection PyBroadException
             try:
                 pixel_array[
                     math.floor((x0 - 1) / self.drawing_coef), math.floor((y0 - 1) / self.drawing_coef)] = color_of_line

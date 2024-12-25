@@ -1,5 +1,3 @@
-import pygame
-
 from engines.DrawingEngine import *
 from engines.ObjectEngine import *
 
@@ -10,7 +8,7 @@ DRAWING_WINDOW_HEIGHT = 900
 class GameEngine:
 
     def __init__(self, demo_request_input: str):
-        self.demo = demo_request_input
+        self.demo_name = demo_request_input
 
     def run(self):
 
@@ -39,7 +37,6 @@ class GameEngine:
         # 6. FPS init
         clock.tick()
         count = 0
-        fps = 0
         dt_list = []
 
         # 7. Condition of run init
@@ -51,7 +48,7 @@ class GameEngine:
         # 9. Drawing engine init
         de = DrawingEngine(game_field_coef)
 
-        # 8.3 interuptors declaration
+        # 8.3 interrupter declaration
         mouse_up = False
         mouse_down = False
         kb_space = False
@@ -83,7 +80,12 @@ class GameEngine:
 
             pixel_array = pygame.PixelArray(screen)
 
-            oe.update_set_of_objects((mouse_pos[0] * game_field_coef, mouse_pos[1] * game_field_coef), mouse_up, mouse_down, kb_space, self.demo, dt)
+            oe.update_set_of_objects((mouse_pos[0] * game_field_coef, mouse_pos[1] * game_field_coef),
+                                     mouse_up,
+                                     mouse_down,
+                                     kb_space,
+                                     self.demo_name,
+                                     dt)
 
             de.draw_window(pixel_array, oe.get_set_of_objects())
 
@@ -105,5 +107,3 @@ class GameEngine:
             mouse_up = False
             mouse_down = False
             kb_space = False
-
-

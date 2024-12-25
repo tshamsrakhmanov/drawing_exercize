@@ -1,6 +1,4 @@
 import math
-import types
-
 from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector, Line, ChainPiece
 from objects.GeometryObjects import Dot
 from settings.colors import *
@@ -9,7 +7,7 @@ from settings.colors import *
 class ObjectsEngine:
     # to resolve out-of bounds movement
 
-    def __init__(self, WIDTH: int, HEIGHT: int, coef: int, segments: int):
+    def __init__(self, width: int, height: int, coef: int, segments: int):
         """
         Init of objects engine
          - create empty set of objects
@@ -17,8 +15,8 @@ class ObjectsEngine:
         """
         self.set_of_objects = set()
         self.ticker_cache = None
-        self.field_coordinate_x = WIDTH * coef
-        self.field_coordinate_y = HEIGHT * coef
+        self.field_coordinate_x = width * coef
+        self.field_coordinate_y = height * coef
         self.drawing_coef = coef
         self.energy_loss = 0.95
         self.boundary_for_moving_objects = 500
@@ -34,24 +32,16 @@ class ObjectsEngine:
 
     def get_objects_by_adjacent_sector(self, sector_id_x_input: int, sector_id_y_input, obj_self):
 
-        answer = set(filter(lambda x: isinstance(x, MovableCircle) and
-                                      x.sector_x - 1 <= sector_id_x_input <= x.sector_x + 1 and
-                                      x.sector_y - 1 <= sector_id_y_input <= x.sector_y + 1 and
-                                      x != obj_self, self.set_of_objects))
-
-        return answer
+        return set(filter(lambda x:
+                          isinstance(x, MovableCircle) and
+                          x.sector_x - 1 <= sector_id_x_input <= x.sector_x + 1 and
+                          x.sector_y - 1 <= sector_id_y_input <= x.sector_y + 1 and
+                          x != obj_self, self.set_of_objects))
 
     def update_set_of_objects(self, mouse_pos: tuple, mouse_up: bool, mouse_down: bool, kb_space: bool, demo_name: str,
                               dt: int):
-        """
-        By evoking this method ObjectEngine will update status and all relevant parameters of all objects in modeling space
-        :param mouse_pos: provide coordinates of mouse position on the screen
-        :param mouse_up: detection of mouse release button
-        :param mouse_down: detection of mouse press button
-        :return: None
-        """
 
-        # Reset scene by space keyboard invoke - avaliable each 1000 secs
+        # Reset scene by space keyboard invoke - available each 1000 secs
         self.timer += dt
 
         if kb_space and not self.started:
@@ -59,12 +49,13 @@ class ObjectsEngine:
             if demo_name == 'sample_collisions':
                 self.set_of_objects.clear()
 
-                sectors_qnty = 5
+                sectors_quantity = 5
 
-                for i in range(sectors_qnty):
+                for i in range(sectors_quantity):
                     temp_dot = Dot((mouse_pos[0]) + random.randint(-500, 500),
                                    (mouse_pos[1]) + random.randint(-500, 500))
-                    vector_1 = Vector(float(360 * i /sectors_qnty) + 14, temp_dot, energy_input=float(random.randint(1500, 3000)))
+                    vector_1 = Vector(float(360 * i / sectors_quantity) + 14, temp_dot,
+                                      energy_input=float(random.randint(1500, 3000)))
                     movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
                                                    i_color=COLOR_RANDOM())
 
@@ -199,26 +190,36 @@ class ObjectsEngine:
                 dot_tail20 = Dot(self.field_coordinate_x * 1 / 2, self.field_coordinate_y * 1 / 2)
 
                 sneak_head = PinBoardCircle(i_dot=dot_head, i_radius=30, i_color=COLOR_WHITE)
-                sneak_tail1 = ChainPiece(sneak_head, link_size=29, i_dot=dot_tail1, i_radius=30, i_color=(255,0,0))
-                sneak_tail2 = ChainPiece(sneak_tail1, link_size=28, i_dot=dot_tail2, i_radius=30, i_color=(255,40,0))
-                sneak_tail3 = ChainPiece(sneak_tail2, link_size=27, i_dot=dot_tail3, i_radius=30, i_color=(255,80,0))
-                sneak_tail4 = ChainPiece(sneak_tail3, link_size=26, i_dot=dot_tail4, i_radius=30, i_color=(255,140,0))
-                sneak_tail5 = ChainPiece(sneak_tail4, link_size=25, i_dot=dot_tail5, i_radius=30, i_color=(255,178,0))
-                sneak_tail6 = ChainPiece(sneak_tail5, link_size=24, i_dot=dot_tail6, i_radius=30, i_color=(255,216,0))
-                sneak_tail7 = ChainPiece(sneak_tail6, link_size=23, i_dot=dot_tail7, i_radius=30, i_color=(255,255,0))
-                sneak_tail8 = ChainPiece(sneak_tail7, link_size=22, i_dot=dot_tail8, i_radius=30, i_color=(170,216,0))
-                sneak_tail9 = ChainPiece(sneak_tail8, link_size=21, i_dot=dot_tail9, i_radius=30, i_color=(85,176,0))
-                sneak_tail10 = ChainPiece(sneak_tail9, link_size=20, i_dot=dot_tail10, i_radius=30, i_color=(0,140,0))
-                sneak_tail11 = ChainPiece(sneak_tail10, link_size=19, i_dot=dot_tail11, i_radius=30, i_color=(0,156,85))
-                sneak_tail12 = ChainPiece(sneak_tail11, link_size=18, i_dot=dot_tail12, i_radius=30, i_color=(0,173,170))
-                sneak_tail13 = ChainPiece(sneak_tail12, link_size=17, i_dot=dot_tail13, i_radius=30, i_color=(0,191,255))
-                sneak_tail14 = ChainPiece(sneak_tail13, link_size=16, i_dot=dot_tail14, i_radius=30, i_color=(0,127,238))
-                sneak_tail15 = ChainPiece(sneak_tail14, link_size=15, i_dot=dot_tail15, i_radius=30, i_color=(0,64,221))
-                sneak_tail16 = ChainPiece(sneak_tail15, link_size=14, i_dot=dot_tail16, i_radius=30, i_color=(0,0,205))
-                sneak_tail17 = ChainPiece(sneak_tail16, link_size=13, i_dot=dot_tail17, i_radius=30, i_color=(46,0,183))
-                sneak_tail18 = ChainPiece(sneak_tail17, link_size=12, i_dot=dot_tail18, i_radius=30, i_color=(92,0,161))
-                sneak_tail19 = ChainPiece(sneak_tail18, link_size=11, i_dot=dot_tail19, i_radius=30, i_color=(140,0,140))
-                sneak_tail20 = ChainPiece(sneak_tail19, link_size=10 , i_dot=dot_tail20, i_radius=30, i_color=(140,0,140))
+                sneak_tail1 = ChainPiece(sneak_head, link_size=29, i_dot=dot_tail1, i_radius=30, i_color=(255, 0, 0))
+                sneak_tail2 = ChainPiece(sneak_tail1, link_size=28, i_dot=dot_tail2, i_radius=30, i_color=(255, 40, 0))
+                sneak_tail3 = ChainPiece(sneak_tail2, link_size=27, i_dot=dot_tail3, i_radius=30, i_color=(255, 80, 0))
+                sneak_tail4 = ChainPiece(sneak_tail3, link_size=26, i_dot=dot_tail4, i_radius=30, i_color=(255, 140, 0))
+                sneak_tail5 = ChainPiece(sneak_tail4, link_size=25, i_dot=dot_tail5, i_radius=30, i_color=(255, 178, 0))
+                sneak_tail6 = ChainPiece(sneak_tail5, link_size=24, i_dot=dot_tail6, i_radius=30, i_color=(255, 216, 0))
+                sneak_tail7 = ChainPiece(sneak_tail6, link_size=23, i_dot=dot_tail7, i_radius=30, i_color=(255, 255, 0))
+                sneak_tail8 = ChainPiece(sneak_tail7, link_size=22, i_dot=dot_tail8, i_radius=30, i_color=(170, 216, 0))
+                sneak_tail9 = ChainPiece(sneak_tail8, link_size=21, i_dot=dot_tail9, i_radius=30, i_color=(85, 176, 0))
+                sneak_tail10 = ChainPiece(sneak_tail9, link_size=20, i_dot=dot_tail10, i_radius=30, i_color=(0, 140, 0))
+                sneak_tail11 = ChainPiece(sneak_tail10, link_size=19, i_dot=dot_tail11, i_radius=30,
+                                          i_color=(0, 156, 85))
+                sneak_tail12 = ChainPiece(sneak_tail11, link_size=18, i_dot=dot_tail12, i_radius=30,
+                                          i_color=(0, 173, 170))
+                sneak_tail13 = ChainPiece(sneak_tail12, link_size=17, i_dot=dot_tail13, i_radius=30,
+                                          i_color=(0, 191, 255))
+                sneak_tail14 = ChainPiece(sneak_tail13, link_size=16, i_dot=dot_tail14, i_radius=30,
+                                          i_color=(0, 127, 238))
+                sneak_tail15 = ChainPiece(sneak_tail14, link_size=15, i_dot=dot_tail15, i_radius=30,
+                                          i_color=(0, 64, 221))
+                sneak_tail16 = ChainPiece(sneak_tail15, link_size=14, i_dot=dot_tail16, i_radius=30,
+                                          i_color=(0, 0, 205))
+                sneak_tail17 = ChainPiece(sneak_tail16, link_size=13, i_dot=dot_tail17, i_radius=30,
+                                          i_color=(46, 0, 183))
+                sneak_tail18 = ChainPiece(sneak_tail17, link_size=12, i_dot=dot_tail18, i_radius=30,
+                                          i_color=(92, 0, 161))
+                sneak_tail19 = ChainPiece(sneak_tail18, link_size=11, i_dot=dot_tail19, i_radius=30,
+                                          i_color=(140, 0, 140))
+                sneak_tail20 = ChainPiece(sneak_tail19, link_size=10, i_dot=dot_tail20, i_radius=30,
+                                          i_color=(140, 0, 140))
 
                 self.add_object(sneak_head)
                 self.add_object(sneak_tail1)
@@ -242,46 +243,12 @@ class ObjectsEngine:
                 self.add_object(sneak_tail19)
                 self.add_object(sneak_tail20)
 
-
-        """
-        # TODO this piece of code generates solution for demo iterativly by time slice.
-        #  Need to rework as option flag to program execution - if demo will be resterted.
-        # self.timer += dt
-        #
-        # if self.timer > self.time_previous + 5000:
-        #     self.set_of_objects.clear()
-        #     self.time_previous = 0
-        #     self.timer = 0
-        #
-        #     temp_x = random.randint(500, self.field_coordinate_x)
-        #     temp_y = random.randint(500, self.field_coordinate_y)
-        #     for i in range(72):
-        #         temp_dot = Dot(temp_x + random.randint(-1000, 1000), temp_y + random.randint(-1000, 1000))
-        #         vector_1 = Vector(float(i * 5.5), temp_dot, energy_input=float(random.randint(100, 2000)))
-        #         movable_circle = MovableCircle(vector_1, i_dot=temp_dot, i_radius=random.randint(5, 25),
-        #                                        i_color=COLOR_RANDOM())
-        #         self.add_object(movable_circle)
-
-        # TODO turn on  this feature only when it'll be needed to optimize FPS for large quantities of objects with collisions
-        # Separate algorythm to apply sector id to objects:
-        # for obj in self.set_of_objects:
-        #     if isinstance(obj, MovableCircle):
-        #         obj.sector_x = obj.vector.dot.x // self.segment_dimension_x
-        #         obj.sector_y = obj.vector.dot.y // self.segment_dimension_y
-        """
-
         for obj in self.set_of_objects:
 
             if isinstance(obj, GradientCircle):
 
                 """
-                GRADIENT CIRCLE FACILITATION
-                Sort-of-implementation due to enormous volume of fine tuning
-                This values of proportions are tested /good/ with following matrix:
-
-                
-                distance = 40
-
+                only for this respective dimensions:
                 for i in range(1, 38): # 38
                     for y in range(1, 19): # 19
                         temp_dot = Dot(distance * i, distance * y)
@@ -300,16 +267,15 @@ class ObjectsEngine:
                     obj.actual_size = obj.radius * 2
                     obj.color = COLOR_GREEN
                 elif obj.radius * min_dist <= distance < obj.radius * max_dist:
-                    coeff_1 = (distance - min_dist * obj.radius) / (delta_dist * obj.radius)
+                    coefficient = (distance - min_dist * obj.radius) / (delta_dist * obj.radius)
                     obj.actual_size = int(
-                        (obj.radius / 2) + (1.5 * obj.radius) * coeff_1)
-                    obj.color = (int(255 - 255 * coeff_1), int(0 + 255 * coeff_1), 0)
+                        (obj.radius / 2) + (1.5 * obj.radius) * coefficient)
+                    obj.color = (int(255 - 255 * coefficient), int(0 + 255 * coefficient), 0)
                 else:
                     obj.actual_size = int(obj.radius / 4)
                     obj.color = COLOR_RED
             elif isinstance(obj, PinBoardCircle):
 
-                # TODO implement distance calculation only for PinBoardCircle's only reachable for mouse in certain sector (with feature implemented, ofc)
                 distance = math.sqrt((mouse_pos[0] - obj.center_point.coordinate_x) ** 2 + (
                         mouse_pos[1] - obj.center_point.coordinate_y) ** 2)
 
@@ -371,22 +337,6 @@ class ObjectsEngine:
                     obj.center_point.coordinate_x = self.field_coordinate_x - self.boundary_for_moving_objects - 1
                     obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
 
-                # CONDITION - ANOTHER BALL HIT
-                # for adjacent_obj in self.get_objects_by_adjacent_sector(obj.sector_x, obj.sector_y, obj):
-                #
-                #     distance = math.sqrt(
-                #         (obj.dot_start.x - adjacent_obj.dot_start.x) ** 2 + (
-                #                 obj.dot_start.y - adjacent_obj.dot_start.y) ** 2)
-                #
-                #     if distance < obj.radius * 35:
-                #         print('HIT')
-                #         obj.vector.degree, adjacent_obj.vector.degree = adjacent_obj.vector.degree, obj.vector.degree
-                #         obj.vector.energy *= self.energy_loss
-                #     else:
-                #         pass
-                # obj.vector.degree = self.mirror_angle_by_y_axis(obj.vector.degree)
-                # adjacent_obj.vector = self.mirror_angle_by_x_axis(adjacent_obj.vector.degree)
-
                 # GENERAL - LINEAR MOVEMENT BY VECTOR
                 if obj.vector.energy > 0:
                     obj.vector.dot.coordinate_x += math.floor(
@@ -398,7 +348,6 @@ class ObjectsEngine:
                 obj.vector.energy = round(obj.vector.energy, 3)
             elif isinstance(obj, ChainPiece):
                 obj: ChainPiece
-                obj.next_link: ChainPiece
 
                 if obj.next_link is not None:
 
@@ -410,10 +359,10 @@ class ObjectsEngine:
                         math.atan2(obj.next_link.center_point.coordinate_y - obj.center_point.coordinate_y,
                                    obj.next_link.center_point.coordinate_x - obj.center_point.coordinate_x))), 3)
 
-                    dx = math.floor((distance / 3) * math.cos(math.radians(raw_angle)))
-                    dy = math.floor((distance / 3) * math.sin(math.radians(raw_angle)))
+                    dx = math.floor((distance / 5) * math.cos(math.radians(raw_angle)))
+                    dy = math.floor((distance / 5) * math.sin(math.radians(raw_angle)))
 
-                    if distance > 25:
+                    if distance > 1:
                         obj.center_point.coordinate_x += dx
                         obj.center_point.coordinate_y += dy
 

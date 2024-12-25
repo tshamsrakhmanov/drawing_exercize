@@ -1,5 +1,6 @@
 from settings.colors import *
 
+
 class Dot:
     def __init__(self, i_x, i_y, i_color: RGBColor = COLOR_WHITE):
         self.i_color = i_color
@@ -22,14 +23,16 @@ class Line:
         self.color_point_end = color_point_end
 
     def __repr__(self):
-        return f'Line({self.dot_start.coordinate_x},{self.dot_start.coordinate_y} - {self.dot_end.coordinate_x},{self.dot_end.coordinate_y})'
+        return (f'Line({self.dot_start.coordinate_x},{self.dot_start.coordinate_y} - '
+                f'{self.dot_end.coordinate_x},{self.dot_end.coordinate_y})')
 
 
-class Circle():
-    def __init__(self, i_dot: Dot, i_radius: int, i_color:RGBColor):
+class Circle:
+    def __init__(self, i_dot: Dot, i_radius: int, i_color: RGBColor):
         self.i_color = i_color
         self.center_point = i_dot
         self.radius = i_radius
 
     def __repr__(self):
-        return f'Cicrle({self.center_point.coordinate_x},{self.center_point.coordinate_y} - {self.radius} - {self.color})'
+        return (f'Circle({self.center_point.coordinate_x},{self.center_point.coordinate_y} - '
+                f'{self.radius} - {self.i_color})')

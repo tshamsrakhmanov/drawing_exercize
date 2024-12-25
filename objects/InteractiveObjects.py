@@ -1,5 +1,3 @@
-import math
-
 from objects.GeometryObjects import *
 
 
