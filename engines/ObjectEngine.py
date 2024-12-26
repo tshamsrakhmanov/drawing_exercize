@@ -1,5 +1,6 @@
 import math
-from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector, Line, ChainPiece
+from objects.InteractiveObjects import PinBoardCircle, GradientCircle, MovableCircle, Vector, Line, ChainPiece, \
+    BezierPoint, BezierContainer
 from objects.GeometryObjects import Dot
 from settings.colors import *
 
@@ -8,11 +9,7 @@ class ObjectsEngine:
     # to resolve out-of bounds movement
 
     def __init__(self, width: int, height: int, coef: int, segments: int):
-        """
-        Init of objects engine
-         - create empty set of objects
-         - t.b.d. later with additional info
-        """
+
         self.set_of_objects = set()
         self.ticker_cache = None
         self.field_coordinate_x = width * coef
@@ -27,9 +24,6 @@ class ObjectsEngine:
         self.time_previous = 0
         self.started = False
 
-    # def get_field(self):
-    #     return self.field_coordinate_x, self.field_coordinate_y
-
     def get_objects_by_adjacent_sector(self, sector_id_x_input: int, sector_id_y_input, obj_self):
 
         return set(filter(lambda x:
@@ -43,6 +37,10 @@ class ObjectsEngine:
 
         # Reset scene by space keyboard invoke - available each 1000 secs
         self.timer += dt
+
+        ###############################################
+        # INITIAL GAME SETUP - ADD OBJECTS BY DEMO NAME
+        ###############################################
 
         if kb_space and not self.started:
             self.started = True
@@ -242,6 +240,21 @@ class ObjectsEngine:
                 self.add_object(sneak_tail18)
                 self.add_object(sneak_tail19)
                 self.add_object(sneak_tail20)
+            elif demo_name == 'bezier':
+                dot1 = Dot(self.field_coordinate_x * 1 / 8, self.field_coordinate_y * 1 / 8)
+                dot2 = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 2)
+                dot3 = Dot(self.field_coordinate_x * 7 / 8, self.field_coordinate_y * 1 / 8)
+                b1 = BezierPoint(dot1.coordinate_x, dot1.coordinate_y, True)
+                b2 = BezierPoint(dot2.coordinate_x, dot2.coordinate_y, False)
+                b3 = BezierPoint(dot3.coordinate_x, dot3.coordinate_y, True)
+                bc1 = BezierContainer(b1, b2, b3)
+                mv1 = PinBoardCircle(i_dot=b2, i_radius=25, i_color=COLOR_WHITE)
+                self.add_object(bc1)
+                self.add_object(mv1)
+
+        ##########################################
+        # OBJECTS LOOP - UPDATE STATE OF AN OBJECT
+        ##########################################
 
         for obj in self.set_of_objects:
 

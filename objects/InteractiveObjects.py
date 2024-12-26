@@ -51,3 +51,29 @@ class ChainPiece(Circle, InteractiveObject):
         Circle.__init__(self, **kwargs)
         self.next_link = next_link
         self.link_size = link_size
+
+
+class BezierPoint(InteractiveObject):
+
+    def __init__(self, x, y, is_on_line: bool):
+        self.coordinate_x = x
+        self.coordinate_y = y
+        self.is_on_line = is_on_line
+
+    def __repr__(self):
+        return f'BezierPoint ({self.coordinate_x},{self.coordinate_y}) ({"X" if self.is_on_line else "V"})'
+
+
+class BezierContainer(InteractiveObject):
+
+    def __init__(self, *args: BezierPoint):
+        self.list_of_bezier_points = list(args)
+
+    def __iter__(self):
+        return iter(self.list_of_bezier_points)
+
+    def __repr__(self):
+        return f'BezierContainer {[str(i) for i in self.list_of_bezier_points]}'
+
+    def __len__(self):
+        return len(self.list_of_bezier_points)

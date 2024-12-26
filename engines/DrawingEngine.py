@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from objects.InteractiveObjects import *
 import math
@@ -53,6 +55,94 @@ class DrawingEngine:
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                 math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
                                             obj.link_size, pixel_array_input, obj.i_color)
+            elif isinstance(obj, BezierContainer):
+
+                interpolation_steps = 25
+
+                list_of_bezier_points = list(obj)
+                temp_list_of_points = []
+
+                if len(obj) == 3:
+
+                    # naming of points for easier understanding
+                    base_point = list_of_bezier_points[0]
+                    anchor = list_of_bezier_points[1]
+                    finish_point = list_of_bezier_points[2]
+
+                    # calculate angle base-to-anchor (to calculate portions)
+                    raw_angle_base_to_anchor = round(self.negative_to_positive(math.degrees(
+                        math.atan2(anchor.coordinate_y - base_point.coordinate_y,
+                                   anchor.coordinate_x - base_point.coordinate_x))), 3)
+
+                    # calculate angle anchor-to-finish (to calculate portions)
+                    raw_angle_anchor_to_finish = round(self.negative_to_positive(math.degrees(
+                        math.atan2(finish_point.coordinate_y - anchor.coordinate_y,
+                                   finish_point.coordinate_x - anchor.coordinate_x))), 3)
+
+                    # calculate len from base to anchor
+                    len_base_to_anchor = math.sqrt((base_point.coordinate_x - anchor.coordinate_x) ** 2 +
+                                                   (base_point.coordinate_y - anchor.coordinate_y) ** 2)
+                    # calculate len from anchor to finish
+                    len_anchor_to_finish = math.sqrt((anchor.coordinate_x - finish_point.coordinate_x) ** 2 +
+                                                     (anchor.coordinate_y - finish_point.coordinate_y) ** 2)
+
+                    # add first point
+                    temp_list_of_points.append(
+                        Dot(round(list_of_bezier_points[0].coordinate_x), round(list_of_bezier_points[0].coordinate_y),
+                            COLOR_GREEN))
+
+                    # add intermediate (interpolated) points
+                    for i in range(1, interpolation_steps + 1):
+                        temp_point_1 = Dot(round(
+                            base_point.coordinate_x + len_base_to_anchor * (i / interpolation_steps) * math.cos(
+                                math.radians(raw_angle_base_to_anchor))),
+                                           round(base_point.coordinate_y + len_base_to_anchor * (
+                                                       i / interpolation_steps) * math.sin(
+                                               math.radians(raw_angle_base_to_anchor))))
+                        temp_point_2 = Dot(round(
+                            anchor.coordinate_x + len_anchor_to_finish * (i / interpolation_steps) * math.cos(
+                                math.radians(raw_angle_anchor_to_finish))),
+                                           round(anchor.coordinate_y + len_anchor_to_finish * (
+                                                       i / interpolation_steps) * math.sin(
+                                               math.radians(raw_angle_anchor_to_finish))))
+
+                        raw_angle_internal = round(self.negative_to_positive(math.degrees(
+                            math.atan2(temp_point_2.coordinate_y - temp_point_1.coordinate_y,
+                                       temp_point_2.coordinate_x - temp_point_1.coordinate_x))), 3)
+
+                        len_internal = math.sqrt((temp_point_1.coordinate_x - temp_point_2.coordinate_x) ** 2 +
+                                                 (temp_point_1.coordinate_y - temp_point_2.coordinate_y) ** 2)
+
+                        new_temp_point = Dot(round(
+                            temp_point_1.coordinate_x + len_internal * (i / interpolation_steps) * math.cos(
+                                math.radians(raw_angle_internal))),
+                                             round(temp_point_1.coordinate_y + len_internal * (
+                                                         i / interpolation_steps) * math.sin(
+                                                 math.radians(raw_angle_internal))), COLOR_GREEN)
+
+                        temp_list_of_points.append(new_temp_point)
+
+                    # add last point
+                    temp_list_of_points.append(
+                        Dot(round(list_of_bezier_points[2].coordinate_x), round(list_of_bezier_points[2].coordinate_y),
+                            COLOR_GREEN))
+
+
+                    for pos in temp_list_of_points:
+                        self.draw_point(Dot(pos.coordinate_x, pos.coordinate_y), pixel_array_input, pos.i_color)
+
+                    for i in range(1, len(temp_list_of_points)):
+                        act_point = temp_list_of_points[i]
+                        next_point = temp_list_of_points[i - 1]
+
+                        self.draw_line(act_point,next_point, pixel_array_input, COLOR_RANDOM())
+
+                elif len(obj) > 3:
+                    print('bi-cubic')
+                else:
+                    print('no such solution')
+
+
             elif isinstance(obj, Circle):
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
                                                 math.floor(obj.center_point.coordinate_y / self.drawing_coef)),
@@ -160,3 +250,10 @@ class DrawingEngine:
         if pointed:
             self.draw_point(point_start, pixel_array, color_start)
             self.draw_point(point_end, pixel_array, color_end)
+
+    @staticmethod
+    def negative_to_positive(a):
+        angle = a % 360
+        if angle < 0:
+            angle += 360
+        return angle
