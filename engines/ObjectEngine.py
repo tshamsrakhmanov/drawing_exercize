@@ -241,9 +241,9 @@ class ObjectsEngine:
                 self.add_object(sneak_tail19)
                 self.add_object(sneak_tail20)
             elif demo_name == 'bezier':
-                dot1 = Dot(self.field_coordinate_x * 1 / 8, self.field_coordinate_y * 1 / 8)
+                dot1 = Dot(self.field_coordinate_x * 2 / 8, self.field_coordinate_y * 4 / 8)
                 dot2 = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 2)
-                dot3 = Dot(self.field_coordinate_x * 7 / 8, self.field_coordinate_y * 1 / 8)
+                dot3 = Dot(self.field_coordinate_x * 6 / 8, self.field_coordinate_y * 4 / 8)
                 b1 = BezierPoint(dot1.coordinate_x, dot1.coordinate_y, True)
                 b2 = BezierPoint(dot2.coordinate_x, dot2.coordinate_y, False)
                 b3 = BezierPoint(dot3.coordinate_x, dot3.coordinate_y, True)

@@ -1,5 +1,3 @@
-import time
-
 import pygame
 from objects.InteractiveObjects import *
 import math
@@ -57,17 +55,16 @@ class DrawingEngine:
                                             obj.link_size, pixel_array_input, obj.i_color)
             elif isinstance(obj, BezierContainer):
 
-                interpolation_steps = 25
+                interpolation_steps = 30
 
-                list_of_bezier_points = list(obj)
-                temp_list_of_points = []
+                bezier_interpolation_points_list = []
 
                 if len(obj) == 3:
 
                     # naming of points for easier understanding
-                    base_point = list_of_bezier_points[0]
-                    anchor = list_of_bezier_points[1]
-                    finish_point = list_of_bezier_points[2]
+                    base_point = list(obj)[0]
+                    anchor = list(obj)[1]
+                    finish_point = list(obj)[2]
 
                     # calculate angle base-to-anchor (to calculate portions)
                     raw_angle_base_to_anchor = round(self.negative_to_positive(math.degrees(
@@ -87,18 +84,22 @@ class DrawingEngine:
                                                      (anchor.coordinate_y - finish_point.coordinate_y) ** 2)
 
                     # add first point
-                    temp_list_of_points.append(
-                        Dot(round(list_of_bezier_points[0].coordinate_x), round(list_of_bezier_points[0].coordinate_y),
+                    bezier_interpolation_points_list.append(
+                        Dot(round(list(obj)[0].coordinate_x), round(list(obj)[0].coordinate_y),
                             COLOR_GREEN))
 
                     # add intermediate (interpolated) points
                     for i in range(1, interpolation_steps + 1):
+
+                        # make point by 0.1 ... 0.9 of length from base to anchor
                         temp_point_1 = Dot(round(
                             base_point.coordinate_x + len_base_to_anchor * (i / interpolation_steps) * math.cos(
                                 math.radians(raw_angle_base_to_anchor))),
                                            round(base_point.coordinate_y + len_base_to_anchor * (
                                                        i / interpolation_steps) * math.sin(
                                                math.radians(raw_angle_base_to_anchor))))
+
+                        # make point by 0.1 ... 0.9 of length from anchor to finish
                         temp_point_2 = Dot(round(
                             anchor.coordinate_x + len_anchor_to_finish * (i / interpolation_steps) * math.cos(
                                 math.radians(raw_angle_anchor_to_finish))),
@@ -106,13 +107,16 @@ class DrawingEngine:
                                                        i / interpolation_steps) * math.sin(
                                                math.radians(raw_angle_anchor_to_finish))))
 
+                        # calculate angle, given line made of 2 temp points (to know, in which direction shift)
                         raw_angle_internal = round(self.negative_to_positive(math.degrees(
                             math.atan2(temp_point_2.coordinate_y - temp_point_1.coordinate_y,
                                        temp_point_2.coordinate_x - temp_point_1.coordinate_x))), 3)
 
+                        # length b/w two temp points
                         len_internal = math.sqrt((temp_point_1.coordinate_x - temp_point_2.coordinate_x) ** 2 +
                                                  (temp_point_1.coordinate_y - temp_point_2.coordinate_y) ** 2)
 
+                        # make point in 0.1 ... 0.9 on line b/w two temp points
                         new_temp_point = Dot(round(
                             temp_point_1.coordinate_x + len_internal * (i / interpolation_steps) * math.cos(
                                 math.radians(raw_angle_internal))),
@@ -120,28 +124,29 @@ class DrawingEngine:
                                                          i / interpolation_steps) * math.sin(
                                                  math.radians(raw_angle_internal))), COLOR_GREEN)
 
-                        temp_list_of_points.append(new_temp_point)
+                        bezier_interpolation_points_list.append(new_temp_point)
 
                     # add last point
-                    temp_list_of_points.append(
-                        Dot(round(list_of_bezier_points[2].coordinate_x), round(list_of_bezier_points[2].coordinate_y),
+                    bezier_interpolation_points_list.append(
+                        Dot(round(list(obj)[2].coordinate_x), round(list(obj)[2].coordinate_y),
                             COLOR_GREEN))
 
+                    # drawing points instead of lines
+                    # -------------------------------
+                    # for pos in bezier_interpolation_points_list:
+                    #     self.draw_point(Dot(pos.coordinate_x, pos.coordinate_y), pixel_array_input, pos.i_color)
 
-                    for pos in temp_list_of_points:
-                        self.draw_point(Dot(pos.coordinate_x, pos.coordinate_y), pixel_array_input, pos.i_color)
-
-                    for i in range(1, len(temp_list_of_points)):
-                        act_point = temp_list_of_points[i]
-                        next_point = temp_list_of_points[i - 1]
-
-                        self.draw_line(act_point,next_point, pixel_array_input, COLOR_RANDOM())
+                    # drawing interpolated lines
+                    # --------------------------
+                    for i in range(1, len(bezier_interpolation_points_list)):
+                        act_point = bezier_interpolation_points_list[i]
+                        next_point = bezier_interpolation_points_list[i - 1]
+                        self.draw_line(act_point, next_point, pixel_array_input, COLOR_RANDOM())
 
                 elif len(obj) > 3:
                     print('bi-cubic')
                 else:
                     print('no such solution')
-
 
             elif isinstance(obj, Circle):
                 self.draw_circle_centerline(Dot(math.floor(obj.center_point.coordinate_x / self.drawing_coef),
