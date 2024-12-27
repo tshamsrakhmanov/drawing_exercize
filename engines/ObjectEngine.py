@@ -251,7 +251,17 @@ class ObjectsEngine:
                 mv1 = PinBoardCircle(i_dot=b2, i_radius=25, i_color=COLOR_WHITE)
                 self.add_object(bc1)
                 self.add_object(mv1)
-
+            elif demo_name == 'bezier2':
+                b1 = BezierPoint(self.field_coordinate_x * 2 / 8, self.field_coordinate_y * 4 / 8, True)
+                b2 = BezierPoint(self.field_coordinate_x * 2.5 / 8, self.field_coordinate_y * 1 / 4, False)
+                b3 = BezierPoint(self.field_coordinate_x * 5.5 / 8, self.field_coordinate_y * 1 / 4, False)
+                b4 = BezierPoint(self.field_coordinate_x * 6 / 8, self.field_coordinate_y * 4 / 8, True)
+                mv1 = PinBoardCircle(i_dot=b2, i_radius=10, i_color=COLOR_WHITE)
+                mv2 = PinBoardCircle(i_dot=b3, i_radius=10, i_color=COLOR_WHITE)
+                bc1 = BezierContainer(b1, b2, b3, b4)
+                self.add_object(bc1)
+                self.add_object(mv1)
+                self.add_object(mv2)
         ##########################################
         # OBJECTS LOOP - UPDATE STATE OF AN OBJECT
         ##########################################
