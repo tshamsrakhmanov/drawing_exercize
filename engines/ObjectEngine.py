@@ -241,27 +241,28 @@ class ObjectsEngine:
                 self.add_object(sneak_tail19)
                 self.add_object(sneak_tail20)
             elif demo_name == 'bezier':
-                dot1 = Dot(self.field_coordinate_x * 2 / 8, self.field_coordinate_y * 4 / 8)
-                dot2 = Dot(self.field_coordinate_x / 2, self.field_coordinate_y / 2)
-                dot3 = Dot(self.field_coordinate_x * 6 / 8, self.field_coordinate_y * 4 / 8)
+                dot1 = Dot(self.field_coordinate_x * 2 / 8, self.field_coordinate_y * 3 / 8)
+                dot2 = Dot(self.field_coordinate_x / 2, self.field_coordinate_y * 3 / 16)
+                dot3 = Dot(self.field_coordinate_x * 6 / 8, self.field_coordinate_y * 3 / 8)
                 b1 = BezierPoint(dot1.coordinate_x, dot1.coordinate_y, True)
                 b2 = BezierPoint(dot2.coordinate_x, dot2.coordinate_y, False)
                 b3 = BezierPoint(dot3.coordinate_x, dot3.coordinate_y, True)
                 bc1 = BezierContainer(b1, b2, b3)
-                mv1 = PinBoardCircle(i_dot=b2, i_radius=25, i_color=COLOR_WHITE)
-                self.add_object(bc1)
-                self.add_object(mv1)
-            elif demo_name == 'bezier2':
-                b1 = BezierPoint(self.field_coordinate_x * 2 / 8, self.field_coordinate_y * 4 / 8, True)
-                b2 = BezierPoint(self.field_coordinate_x * 2.5 / 8, self.field_coordinate_y * 1 / 4, False)
-                b3 = BezierPoint(self.field_coordinate_x * 5.5 / 8, self.field_coordinate_y * 1 / 4, False)
-                b4 = BezierPoint(self.field_coordinate_x * 6 / 8, self.field_coordinate_y * 4 / 8, True)
                 mv1 = PinBoardCircle(i_dot=b2, i_radius=10, i_color=COLOR_WHITE)
-                mv2 = PinBoardCircle(i_dot=b3, i_radius=10, i_color=COLOR_WHITE)
-                bc1 = BezierContainer(b1, b2, b3, b4)
                 self.add_object(bc1)
                 self.add_object(mv1)
-                self.add_object(mv2)
+
+                b1_1 = BezierPoint(self.field_coordinate_x * 2 / 8, self.field_coordinate_y * 4 / 8, True)
+                b2_1 = BezierPoint(self.field_coordinate_x * 2.5 / 8, self.field_coordinate_y * 3 / 4, False)
+                b3_1 = BezierPoint(self.field_coordinate_x * 5.5 / 8, self.field_coordinate_y * 3 / 4, False)
+                b4_1 = BezierPoint(self.field_coordinate_x * 6 / 8, self.field_coordinate_y * 4 / 8, True)
+                mv1_1 = PinBoardCircle(i_dot=b2_1, i_radius=10, i_color=COLOR_WHITE)
+                mv2_1 = PinBoardCircle(i_dot=b3_1, i_radius=10, i_color=COLOR_WHITE)
+                bc1_1 = BezierContainer(b1_1, b2_1, b3_1, b4_1)
+                self.add_object(bc1_1)
+                self.add_object(mv1_1)
+                self.add_object(mv2_1)
+
         ##########################################
         # OBJECTS LOOP - UPDATE STATE OF AN OBJECT
         ##########################################

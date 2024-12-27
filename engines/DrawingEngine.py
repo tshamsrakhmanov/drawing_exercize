@@ -55,13 +55,11 @@ class DrawingEngine:
                                             obj.link_size, pixel_array_input, obj.i_color)
             elif isinstance(obj, BezierContainer):
 
-
+                interpolation_steps = 30
 
                 if len(obj) == 3:
 
                     bezier_interpolation_points_list = []
-
-                    interpolation_steps = 5
 
                     # naming of points for easier understanding
                     base_point = list(obj)[0]
@@ -134,19 +132,20 @@ class DrawingEngine:
 
                     # drawing points instead of lines
                     # -------------------------------
-                    for pos in bezier_interpolation_points_list:
-                        self.draw_point(Dot(pos.coordinate_x, pos.coordinate_y), pixel_array_input, pos.i_color)
+                    # for pos in bezier_interpolation_points_list:
+                    #     self.draw_point(Dot(pos.coordinate_x, pos.coordinate_y), pixel_array_input, pos.i_color)
 
                     # drawing interpolated lines
                     # --------------------------
-                    # for i in range(1, len(bezier_interpolation_points_list)):
-                    #     act_point = bezier_interpolation_points_list[i]
-                    #     next_point = bezier_interpolation_points_list[i - 1]
-                    #     self.draw_line(act_point, next_point, pixel_array_input, COLOR_RANDOM())
+                    for i in range(1, len(bezier_interpolation_points_list)):
+                        act_point = bezier_interpolation_points_list[i]
+                        next_point = bezier_interpolation_points_list[i - 1]
+                        self.draw_line(act_point, next_point, pixel_array_input, COLOR_WHITE)
+
+                    self.draw_line(base_point, anchor, pixel_array_input, COLOR_GREY)
+                    self.draw_line(finish_point, anchor, pixel_array_input, COLOR_GREY)
 
                 elif len(obj) == 4:
-
-                    interpolation_steps = 30
 
                     bezier_points_list = list(obj)
 
@@ -180,20 +179,34 @@ class DrawingEngine:
 
                     for i in range(1, interpolation_steps + 1):
                         # make point by 0.1 ... 0.9 of length from base to anchor
-                        temp_point_1 = Dot(round(head.coordinate_x + len_head_to_adj1 * (i / interpolation_steps) * math.cos(math.radians(ang_head_adj1))),
-                                           round(head.coordinate_y + len_head_to_adj1 * (i / interpolation_steps) * math.sin(math.radians(ang_head_adj1))))
+                        temp_point_1 = Dot(round(
+                            head.coordinate_x + len_head_to_adj1 * (i / interpolation_steps) * math.cos(
+                                math.radians(ang_head_adj1))),
+                                           round(head.coordinate_y + len_head_to_adj1 * (
+                                                       i / interpolation_steps) * math.sin(
+                                               math.radians(ang_head_adj1))))
 
-                        temp_point_2 = Dot(round(adj1.coordinate_x + len_adj1_to_adj2 * (i / interpolation_steps) * math.cos(math.radians(ang_adj2_adj1))),
-                                           round(adj1.coordinate_y + len_adj1_to_adj2 * (i / interpolation_steps) * math.sin(math.radians(ang_adj2_adj1))))
+                        temp_point_2 = Dot(round(
+                            adj1.coordinate_x + len_adj1_to_adj2 * (i / interpolation_steps) * math.cos(
+                                math.radians(ang_adj2_adj1))),
+                                           round(adj1.coordinate_y + len_adj1_to_adj2 * (
+                                                       i / interpolation_steps) * math.sin(
+                                               math.radians(ang_adj2_adj1))))
 
-                        temp_point_3 = Dot(round(adj2.coordinate_x + len_adj2_to_tail * (i / interpolation_steps) * math.cos(math.radians(ang_tail_adj2))),
-                                           round(adj2.coordinate_y + len_adj2_to_tail * (i / interpolation_steps) * math.sin(math.radians(ang_tail_adj2))))
+                        temp_point_3 = Dot(round(
+                            adj2.coordinate_x + len_adj2_to_tail * (i / interpolation_steps) * math.cos(
+                                math.radians(ang_tail_adj2))),
+                                           round(adj2.coordinate_y + len_adj2_to_tail * (
+                                                       i / interpolation_steps) * math.sin(
+                                               math.radians(ang_tail_adj2))))
 
-                        ang_t2_t1 = round(self.negative_to_positive(math.degrees(math.atan2(temp_point_2.coordinate_y - temp_point_1.coordinate_y,
-                                                                                            temp_point_2.coordinate_x - temp_point_1.coordinate_x))), 3)
+                        ang_t2_t1 = round(self.negative_to_positive(
+                            math.degrees(math.atan2(temp_point_2.coordinate_y - temp_point_1.coordinate_y,
+                                                    temp_point_2.coordinate_x - temp_point_1.coordinate_x))), 3)
 
-                        ang_t3_t2 = round(self.negative_to_positive(math.degrees(math.atan2(temp_point_3.coordinate_y - temp_point_2.coordinate_y,
-                                                                                            temp_point_3.coordinate_x - temp_point_2.coordinate_x))), 3)
+                        ang_t3_t2 = round(self.negative_to_positive(
+                            math.degrees(math.atan2(temp_point_3.coordinate_y - temp_point_2.coordinate_y,
+                                                    temp_point_3.coordinate_x - temp_point_2.coordinate_x))), 3)
 
                         len_t2_to_t1 = math.sqrt((temp_point_2.coordinate_x - temp_point_1.coordinate_x) ** 2 +
                                                  (temp_point_2.coordinate_y - temp_point_1.coordinate_y) ** 2)
@@ -201,20 +214,30 @@ class DrawingEngine:
                         len_t3_to_t2 = math.sqrt((temp_point_3.coordinate_x - temp_point_2.coordinate_x) ** 2 +
                                                  (temp_point_3.coordinate_y - temp_point_2.coordinate_y) ** 2)
 
-                        temp_point_4 = Dot(round(temp_point_1.coordinate_x + len_t2_to_t1 * (i / interpolation_steps) * math.cos(math.radians(ang_t2_t1))),
-                                           round(temp_point_1.coordinate_y + len_t2_to_t1 * (i / interpolation_steps) * math.sin(math.radians(ang_t2_t1))))
+                        temp_point_4 = Dot(round(
+                            temp_point_1.coordinate_x + len_t2_to_t1 * (i / interpolation_steps) * math.cos(
+                                math.radians(ang_t2_t1))),
+                                           round(temp_point_1.coordinate_y + len_t2_to_t1 * (
+                                                       i / interpolation_steps) * math.sin(math.radians(ang_t2_t1))))
 
-                        temp_point_5 = Dot(round(temp_point_2.coordinate_x + len_t3_to_t2 * (i / interpolation_steps) * math.cos(math.radians(ang_t3_t2))),
-                                           round(temp_point_2.coordinate_y + len_t3_to_t2 * (i / interpolation_steps) * math.sin(math.radians(ang_t3_t2))))
+                        temp_point_5 = Dot(round(
+                            temp_point_2.coordinate_x + len_t3_to_t2 * (i / interpolation_steps) * math.cos(
+                                math.radians(ang_t3_t2))),
+                                           round(temp_point_2.coordinate_y + len_t3_to_t2 * (
+                                                       i / interpolation_steps) * math.sin(math.radians(ang_t3_t2))))
 
-                        ang_t5_t4 = round(self.negative_to_positive(math.degrees(math.atan2(temp_point_5.coordinate_y - temp_point_4.coordinate_y,
-                                                                                            temp_point_5.coordinate_x - temp_point_4.coordinate_x))), 3)
+                        ang_t5_t4 = round(self.negative_to_positive(
+                            math.degrees(math.atan2(temp_point_5.coordinate_y - temp_point_4.coordinate_y,
+                                                    temp_point_5.coordinate_x - temp_point_4.coordinate_x))), 3)
 
                         len_t5_to_t4 = math.sqrt((temp_point_5.coordinate_x - temp_point_4.coordinate_x) ** 2 +
                                                  (temp_point_5.coordinate_y - temp_point_4.coordinate_y) ** 2)
 
-                        temp_point_6 = Dot(round(temp_point_4.coordinate_x + len_t5_to_t4 * (i / interpolation_steps) * math.cos(math.radians(ang_t5_t4))),
-                                           round(temp_point_4.coordinate_y + len_t5_to_t4 * (i / interpolation_steps) * math.sin(math.radians(ang_t5_t4))))
+                        temp_point_6 = Dot(round(
+                            temp_point_4.coordinate_x + len_t5_to_t4 * (i / interpolation_steps) * math.cos(
+                                math.radians(ang_t5_t4))),
+                                           round(temp_point_4.coordinate_y + len_t5_to_t4 * (
+                                                       i / interpolation_steps) * math.sin(math.radians(ang_t5_t4))))
 
                         interpolated_lv3_points_list.append(temp_point_6)
 
@@ -251,16 +274,25 @@ class DrawingEngine:
         :return: None
         """
 
-        pixel_array[math.floor((input_point.coordinate_x + 1) / self.drawing_coef), math.floor(input_point.coordinate_y / self.drawing_coef)] = input_color
-        pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), math.floor(input_point.coordinate_y / self.drawing_coef)] = input_color
-        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(input_point.coordinate_y / self.drawing_coef)] = input_color
-        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor((input_point.coordinate_y - 1) / self.drawing_coef)] = input_color
-        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor((input_point.coordinate_y + 1) / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x + 1) / self.drawing_coef), math.floor(
+            input_point.coordinate_y / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), math.floor(
+            input_point.coordinate_y / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
+            input_point.coordinate_y / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
+            (input_point.coordinate_y - 1) / self.drawing_coef)] = input_color
+        pixel_array[math.floor(input_point.coordinate_x / self.drawing_coef), math.floor(
+            (input_point.coordinate_y + 1) / self.drawing_coef)] = input_color
 
-        pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), (math.floor(input_point.coordinate_y - 1 ) / self.drawing_coef)] = input_color
-        pixel_array[math.floor((input_point.coordinate_x + 1) / self.drawing_coef), (math.floor(input_point.coordinate_y + 1 ) / self.drawing_coef)] = input_color
-        pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), (math.floor(input_point.coordinate_y + 1 ) / self.drawing_coef)] = input_color
-        pixel_array[math.floor((input_point.coordinate_x + 1) / self.drawing_coef), (math.floor(input_point.coordinate_y - 1 ) / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), (
+                    math.floor(input_point.coordinate_y - 1) / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x + 1) / self.drawing_coef), (
+                    math.floor(input_point.coordinate_y + 1) / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x - 1) / self.drawing_coef), (
+                    math.floor(input_point.coordinate_y + 1) / self.drawing_coef)] = input_color
+        pixel_array[math.floor((input_point.coordinate_x + 1) / self.drawing_coef), (
+                    math.floor(input_point.coordinate_y - 1) / self.drawing_coef)] = input_color
 
     # noinspection PyMethodMayBeStatic
     def draw_circle_centerline(self, point_center: Dot, radius: int, pixel_array: pygame.PixelArray,
